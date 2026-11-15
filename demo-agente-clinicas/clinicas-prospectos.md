@@ -2,6 +2,7 @@
 
 ## Estado de envíos
 - 14-15 nov 2026: enviado el primer correo a las 11 clínicas de Prioridad 1 y 2 (desde el Gmail de Luciano, aprobado por él).
+- Rebotaron (correo no existe): Policlínico Internacional Ate (info@policlinicointernacional.pe) y Dental Croe La Molina (lamolina@dentalcroe.com). No se encontró otro correo: contactar por WhatsApp (980 504 795 y 954 284 355).
 - Lote 2 (abajo): programado para el lunes 16 nov en la mañana.
 - Seguimiento: un recordatorio corto a los 3-4 días a quien no responda.
 
