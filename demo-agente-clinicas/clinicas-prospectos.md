@@ -1,5 +1,10 @@
 # Clínicas para contactar (prospectos)
 
+## Estado de envíos
+- 14-15 nov 2026: enviado el primer correo a las 11 clínicas de Prioridad 1 y 2 (desde el Gmail de Luciano, aprobado por él).
+- Lote 2 (abajo): programado para el lunes 16 nov en la mañana.
+- Seguimiento: un recordatorio corto a los 3-4 días a quien no responda.
+
 Fecha: 14-nov-2026. Correos sacados de las páginas web o de Facebook de cada clínica. Hay que confirmarlos antes de escribir.
 Regla: ningún correo se envía sin que Luciano lo apruebe.
 
@@ -37,3 +42,19 @@ Regla: ningún correo se envía sin que Luciano lo apruebe.
 - Poner la palabra "PUBLICIDAD" en el asunto.
 - Dar una forma fácil de no recibir más correos.
 - Enviar pocos y personalizados, no masivos.
+
+## Lote 2 (encontradas el 15-nov, enviar el lunes 16-nov)
+| Clínica | Tipo | Zona | Correo | Teléfono | Fuente |
+|---|---|---|---|---|---|
+| Multident Santa Anita | Dental, 2 locales | Av. Ruiseñores, Santa Anita | multidentsantaanita@gmail.com | 980 573 039 | tiktok.com/@multidentsanita |
+| Vita Smile | Odontología integral | Santa Anita | contacto@dentalvitasmileperu.com | 972 076 946 | dentalvitasmileperu.com |
+| Multident SJL | Dental | San Juan de Lurigancho | multidentsjl@gmail.com | 924 336 746 | sites.google.com/view/dentistas-sjl |
+| Multident Chimú | Dental | Av. Gran Chimú, SJL | direccionmultidentchimu@gmail.com | 902 855 812 | facebook.com/Multidentchimu |
+| Tu Familia Dent | Dental, 2 sedes | SJL | contacto@tufamiliadent.com | 934 204 761 | tufamiliadent.com |
+| Dental House Kids | Odontopediatría, 3 sedes | Jesús María, Surco, SJL | Dentalhousekids@gmail.com | 942 793 449 | odontopediatria.pe |
+| Laser Dent Kids | Odontopediatría, varias sedes | Santa Anita, SJL y otras | ldk@laserdentkids.com | 01 748 2911 | laserdentkids.com |
+| Cálido Alivio Fisioterapia | Fisioterapia, 3 sedes | La Molina, Chacarilla, Santa Clara (Ate) | contacto@calidoalivio.com | 996 995 020 | calidoalivio.com |
+| Cerfid La Molina | Medicina física y rehabilitación | La Molina | contactolamolina@cerfid.com.pe | 989 593 710 | cerfid.com.pe |
+| 3E Fisioterapia y Podología | Fisioterapia, varias sedes | La Molina | informes@clinica3e.com | 990 988 833 | clinica3e.com/sedes |
+| Clínica Hollydent | Dental, 2 sedes | Surco y Miraflores | info@clinicahollydent.com | 997 597 493 | facebook.com/clinicahollydent |
+| De La Flor Odontología | Dental, 2 consultorios | Chacarilla y Miraflores | rodolfo@delaflorodontologia.com | 998 224 274 | delaflorodontologia.com |
