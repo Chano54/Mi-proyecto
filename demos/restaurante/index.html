@@ -159,7 +159,7 @@
     .hero{padding:120px 0 60px}
     .hero .grid2,.estrella .grid2,.contacto .caja,.menu-caja{grid-template-columns:1fr}
     .escena{height:320px;order:-1}
-    .anillo{width:130px;height:130px}
+    .anillo{width:120px;height:120px}
     .menu-caja .foto{height:220px}
     .giro{height:340px}
     section{padding:64px 0}
@@ -358,7 +358,15 @@
   <details>
     <summary>Créditos de las fotos</summary>
     <ul id="creditos">
-      <!--CREDITOS-->
+      <li>lomo: <a href="https://commons.wikimedia.org/wiki/File:Lomo-saltado-perudelights.jpg">Lomo-saltado-perudelights.jpg</a>, WikiHes, CC BY-SA 4.0</li>
+      <li>aji: <a href="https://commons.wikimedia.org/wiki/File:Aji_de_gallina_10.jpg">Aji de gallina 10.jpg</a>, ta@keshi kimi, CC BY 2.0</li>
+      <li>ceviche: <a href="https://commons.wikimedia.org/wiki/File:Ceviche_de_Per%C3%BA_CM001.jpg">Ceviche de Perú CM001.jpg</a>, Juan Carlos Fonseca Mata, CC BY-SA 4.0</li>
+      <li>arroz-pollo: <a href="https://commons.wikimedia.org/wiki/File:Arroz_pollo_huancaina_Restaurante_Pe_de_Pisco_-.jpg">Arroz pollo huancaina Restaurante Pe de Pisco -.jpg</a>, Mover el Bigote, CC BY 2.0</li>
+      <li>tallarines: <a href="https://commons.wikimedia.org/wiki/File:Tallarines_verdes.jpg">Tallarines verdes.jpg</a>, Miguel Alan Córdova Silva, CC BY-SA 4.0</li>
+      <li>mariscos: <a href="https://commons.wikimedia.org/wiki/File:Arroz_con_mariscos_002.jpg">Arroz con mariscos 002.jpg</a>, Wilfredor, CC0</li>
+      <li>chicha: <a href="https://commons.wikimedia.org/wiki/File:Chicha_Morada_2017.jpg">Chicha Morada 2017.jpg</a>, young shanahan from Bogotá, Colombia, CC BY 2.0</li>
+      <li>seco: <a href="https://commons.wikimedia.org/wiki/File:Seco_y_frejoles.jpg">Seco y frejoles.jpg</a>, MiguelAlanCS, CC BY-SA 4.0</li>
+      <li>anticuchos: <a href="https://commons.wikimedia.org/wiki/File:Anticucho_del_Per%C3%BA.JPG">Anticucho del Perú.JPG</a>, ver autor en Wikimedia Commons, CC BY-SA 3.0 (recortada)</li>
     </ul>
   </details>
 </footer>
@@ -370,7 +378,7 @@
   (function(){
     var platos=document.querySelectorAll('#anillo .plato');
     function armar(){
-      var r=window.innerWidth<860?190:290;
+      var r=window.innerWidth<860?145:290;
       platos.forEach(function(p,i){p.style.transform='rotateY('+(i*360/platos.length)+'deg) translateZ('+r+'px)';});
     }
     armar(); window.addEventListener('resize',armar);
