@@ -3,7 +3,9 @@
 ## Estado de envíos
 - 14-15 nov 2026: enviado el primer correo a las 11 clínicas de Prioridad 1 y 2 (desde el Gmail de Luciano, aprobado por él).
 - Rebotaron (correo no existe): Policlínico Internacional Ate (info@policlinicointernacional.pe) y Dental Croe La Molina (lamolina@dentalcroe.com). No se encontró otro correo: contactar por WhatsApp (980 504 795 y 954 284 355).
-- Lote 2 (abajo): programado para el lunes 16 nov en la mañana.
+- Lote 2 (abajo): ya enviado el domingo 15 nov a las 9:01 p.m. (hora de Lima) desde el Gmail de Luciano, desde otra sesión. NO reenviar.
+- Rebotó del lote 2: Tu Familia Dent (contacto@tufamiliadent.com, el dominio no existe). Contactar por WhatsApp: 934 204 761.
+- Respuestas de clínicas al lunes 16 nov, 9:40 a.m.: ninguna todavía.
 - Seguimiento: un recordatorio corto a los 3-4 días a quien no responda.
 
 Fecha: 14-nov-2026. Correos sacados de las páginas web o de Facebook de cada clínica. Hay que confirmarlos antes de escribir.
@@ -44,7 +46,7 @@ Regla: ningún correo se envía sin que Luciano lo apruebe.
 - Dar una forma fácil de no recibir más correos.
 - Enviar pocos y personalizados, no masivos.
 
-## Lote 2 (encontradas el 15-nov, enviar el lunes 16-nov)
+## Lote 2 (encontradas el 15-nov, enviadas el 15-nov 9:01 p.m.)
 | Clínica | Tipo | Zona | Correo | Teléfono | Fuente |
 |---|---|---|---|---|---|
 | Multident Santa Anita | Dental, 2 locales | Av. Ruiseñores, Santa Anita | multidentsantaanita@gmail.com | 980 573 039 | tiktok.com/@multidentsanita |
