@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#120d1d">
+<title>Al Toque · Demo</title>
+<style>
+  :root{
+    --bg:#120d1d; --s1:#1d1630; --s2:#2a2142; --s3:#3a2f5a;
+    --tx:#f7f2ff; --mu:#a99cc4; --ac:#ff5a36; --ac2:#ffc93c; --ok:#2fd39a; --warn:#ffb020;
+    --r:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  input{font:inherit}
+  .logo{font-weight:900;letter-spacing:-.04em;font-size:22px;white-space:nowrap}
+  .logo b{color:var(--ac)}
+  .muted{color:var(--mu)}
+  .small{font-size:13px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 18px;border-radius:999px;font-weight:800;background:var(--s2);transition:transform .08s}
+  .btn:active{transform:scale(.97)}
+  .btn.pri{background:var(--ac);color:#fff}
+  .btn.ok{background:var(--ok);color:#06281c}
+  .btn.ghost{background:transparent;border:1px solid var(--s3)}
+  .btn.full{width:100%}
+  .btn[disabled]{opacity:.5;pointer-events:none}
+  .chip{padding:8px 14px;border-radius:999px;background:var(--s1);font-weight:700;font-size:14px;white-space:nowrap}
+  .chip.on{background:var(--tx);color:var(--bg)}
+  .card{background:var(--s1);border-radius:var(--r);padding:16px}
+
+  /* ---------- Inicio ---------- */
+  .home{max-width:560px;margin:0 auto;padding:28px 20px 48px}
+  .hero{padding:36px 0 24px}
+  .hero h1{font-size:44px;line-height:1;font-weight:900;letter-spacing:-.03em;margin:18px 0 14px}
+  .hero h1 span{color:var(--ac)}
+  .hero p{font-size:18px;color:var(--mu);line-height:1.45}
+  .steps{display:grid;gap:10px;margin:22px 0}
+  .step{display:flex;gap:14px;align-items:center}
+  .step .n{flex:none;width:36px;height:36px;border-radius:50%;background:var(--ac2);color:#2a1d00;font-weight:900;display:grid;place-items:center}
+  .roles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+  .roles .btn{flex-direction:column;border-radius:var(--r);padding:16px 8px;font-size:14px}
+  .roles .btn span{font-size:26px}
+  .tag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--s2);color:var(--ac2);padding:5px 10px;border-radius:999px}
+
+  /* ---------- Demo ---------- */
+  .demo-top{position:sticky;top:0;z-index:20;background:rgba(18,13,29,.92);backdrop-filter:blur(10px);padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--s2)}
+  .demo-top .tabs{display:flex;gap:6px;margin-left:auto}
+  .demo-hint{padding:10px 16px;font-size:13px;color:var(--mu);text-align:center}
+  .panels{display:flex;gap:20px;justify-content:center;padding:0 0 30px}
+  .panel{display:none;width:100%;max-width:480px}
+  .panel.on{display:block}
+  .panel-title{display:none}
+  @media (min-width:1150px){
+    .demo-top .tabs{display:none}
+    .panels{padding:20px}
+    .panel{display:block;width:390px;flex:none}
+    .panel.wide{width:520px}
+    .panel-title{display:block;text-align:center;font-weight:800;margin-bottom:10px;color:var(--mu)}
+    .panel .frame{height:calc(100vh - 150px);min-height:560px;overflow:auto;border-radius:28px;border:1px solid var(--s3);background:var(--bg);position:relative}
+  }
+  .frame{position:relative}
+  .toast{display:none;position:fixed;left:0;right:0;margin:0 auto;width:fit-content;top:70px;z-index:60;background:var(--ok);color:#06281c;font-weight:800;padding:12px 18px;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.4);animation:pop .3s;max-width:92vw;text-align:center}
+  .toast.on{display:block}
+
+  /* ---------- Vistas comunes ---------- */
+  .view{min-height:100%;display:flex;flex-direction:column}
+  .vhead{padding:16px 16px 10px;display:flex;align-items:center;gap:12px}
+  .vhead .place{line-height:1.2}
+  .vhead .place b{display:block}
+  .vbody{padding:0 16px 16px;flex:1}
+  .sticky-bottom{position:sticky;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 30%)}
+  .section-t{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);margin:18px 0 10px}
+
+  /* ---------- Cliente ---------- */
+  .cats{display:flex;gap:8px;overflow-x:auto;padding:2px 16px 12px;scrollbar-width:none}
+  .cats::-webkit-scrollbar{display:none}
+  .item{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--s1)}
+  .item .em{flex:none;width:48px;height:48px;border-radius:14px;background:var(--s1);display:grid;place-items:center;font-size:24px}
+  .item .info{flex:1;min-width:0}
+  .item .info b{display:block}
+  .item .info .d{font-size:13px;color:var(--mu);margin:2px 0 4px}
+  .item .price{font-weight:800}
+  .item.off{opacity:.45}
+  .qty{display:flex;align-items:center;gap:6px}
+  .qty button{width:34px;height:34px;border-radius:50%;background:var(--s2);font-weight:900;font-size:18px;display:grid;place-items:center}
+  .qty button.add{background:var(--ac);color:#fff}
+  .qty span{min-width:18px;text-align:center;font-weight:800}
+  .agotado{font-size:12px;font-weight:800;color:var(--warn)}
+  .nav{display:flex;gap:6px;background:var(--s1);border-radius:999px;padding:5px;margin-top:8px}
+  .nav button{flex:1;padding:10px;border-radius:999px;font-weight:800;font-size:14px;color:var(--mu)}
+  .nav button.on{background:var(--s3);color:var(--tx)}
+  .badge{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--ac);color:#fff;font-size:12px;margin-left:4px}
+  .field{display:block;margin:14px 0}
+  .field span{display:block;font-size:13px;color:var(--mu);margin-bottom:6px;font-weight:700}
+  .field input{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--s3);background:var(--s1);color:var(--tx);outline:none}
+  .field input:focus{border-color:var(--ac)}
+  .pays{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .pay{padding:14px 6px;border-radius:14px;background:var(--s1);border:2px solid transparent;font-weight:800;font-size:14px;text-align:center}
+  .pay.on{border-color:var(--ac);background:var(--s2)}
+  .pay i{display:block;font-style:normal;font-size:22px;margin-bottom:4px}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .total{font-size:22px;font-weight:900}
+  .note{font-size:12px;color:var(--mu);text-align:center;margin-top:10px}
+  .order{background:var(--s1);border-radius:20px;padding:18px;margin-bottom:12px;border:2px solid transparent}
+  .order.ready{border-color:var(--ok);background:linear-gradient(160deg,#1c3a32,var(--s1) 70%)}
+  .order.done{opacity:.6}
+  .order .num{font-size:30px;font-weight:900;letter-spacing:-.02em}
+  .code{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-weight:900;font-size:22px;letter-spacing:.18em;background:var(--tx);color:var(--bg);padding:6px 12px;border-radius:10px}
+  .track{display:flex;gap:6px;margin:16px 0 8px}
+  .track div{flex:1;height:6px;border-radius:9px;background:var(--s3)}
+  .track div.on{background:var(--ac2)}
+  .order.ready .track div{background:var(--ok)}
+  .track-l{display:flex;justify-content:space-between;font-size:12px;color:var(--mu);font-weight:700}
+  .track-l .on{color:var(--tx)}
+  .status{font-size:18px;font-weight:800;margin-top:12px}
+  .lines{font-size:14px;color:var(--mu);margin-top:8px;line-height:1.5}
+  .empty{text-align:center;padding:50px 10px;color:var(--mu)}
+  .empty .big{font-size:48px;margin-bottom:10px}
+  .spinner{width:46px;height:46px;border-radius:50%;border:4px solid var(--s3);border-top-color:var(--ac);animation:spin 0.8s linear infinite;margin:0 auto 18px}
+  .overlay{position:fixed;inset:0;z-index:30;background:rgba(10,30,24,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px}
+  .overlay.anim{animation:pop .35s}
+  .view-root{position:relative;min-height:100vh}
+  @media (min-width:1150px){ .panel .view-root{min-height:100%} .panel .overlay{position:absolute} }
+  .overlay .em{font-size:80px;animation:shake .6s 2}
+  .overlay h2{font-size:30px;font-weight:900;margin:14px 0 6px}
+  .overlay p{color:#bfe9d9;margin-bottom:16px}
+
+  /* ---------- Barra ---------- */
+  .bar-cols{display:grid;gap:16px;align-content:start}
+  @media (min-width:900px){ .route-barra .bar-cols{grid-template-columns:repeat(3,1fr)} }
+  .col-h{display:flex;align-items:center;gap:8px;font-weight:900;margin-bottom:10px}
+  .col-h .cnt{background:var(--s2);border-radius:999px;padding:2px 10px;font-size:14px}
+  .tk{background:var(--s1);border-radius:var(--r);padding:14px;margin-bottom:10px;border-left:5px solid var(--ac)}
+  .tk.prep{border-left-color:var(--ac2)}
+  .tk.lst{border-left-color:var(--ok)}
+  .tk .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .tk .top b{font-size:22px}
+  .tk ul{list-style:none;margin:10px 0 12px;font-size:17px;font-weight:700;line-height:1.5}
+  .tk ul i{font-style:normal;color:var(--ac2);margin-right:6px}
+  .tk .btn{padding:12px}
+  .blank{color:var(--mu);font-size:14px;padding:14px;border:1px dashed var(--s3);border-radius:var(--r);text-align:center;margin-bottom:10px}
+
+  /* ---------- Dueño ---------- */
+  .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .kpi{background:var(--s1);border-radius:var(--r);padding:14px}
+  .kpi .v{font-size:24px;font-weight:900;margin-top:4px}
+  .kpi.hl{background:linear-gradient(140deg,var(--ac),#c2361a)}
+  .kpi.hl .muted{color:#ffe0d6}
+  .bars .b{margin:8px 0}
+  .bars .track2{height:10px;background:var(--s2);border-radius:9px;overflow:hidden;margin-top:4px}
+  .bars .fill{height:100%;background:var(--ac2);border-radius:9px}
+  .mi{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--s1)}
+  .mi .nm{flex:1;min-width:0;font-weight:700}
+  .mi .pp{display:flex;align-items:center;gap:4px}
+  .mi .pp button{width:28px;height:28px;border-radius:50%;background:var(--s2);font-weight:900}
+  .mi .pp span{min-width:64px;text-align:center;font-weight:800}
+  .sw{padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;background:#163d30;color:var(--ok);min-width:84px}
+  .sw.off{background:#3d2a0e;color:var(--warn)}
+
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes pop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+  @keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" class="toast" role="status"></div>
+
+<script>
+/* =====================================================================
+   AL TOQUE · demo
+   Una sola página con 3 vistas que se comunican entre sí:
+   cliente (pide y paga), barra (prepara y avisa) y dueño (ve ventas).
+   Los datos se guardan en el navegador, así que todo se sincroniza
+   entre pestañas del mismo celular o compu. El pago es simulado.
+   ===================================================================== */
+
+const STORE_KEY = 'altoque-demo-v1';
+const MINE_KEY  = 'altoque-mis-pedidos-v1';
+const LOCAL = { nombre: 'Discoteca Demo', barra: 'Barra principal' };
+const COMISION = 1; // S/ por pedido para Al Toque (modelo de negocio de ejemplo)
+
+const MENU_INICIAL = [
+  {id:'pilsen',       cat:'Cervezas',    name:'Pilsen',               desc:'Botella 630 ml',                     price:15, emoji:'🍺'},
+  {id:'cusquena',     cat:'Cervezas',    name:'Cusqueña Dorada',      desc:'Botella 620 ml',                     price:17, emoji:'🍺'},
+  {id:'corona',       cat:'Cervezas',    name:'Corona',               desc:'Botella 355 ml',                     price:16, emoji:'🍺'},
+  {id:'pisco-sour',   cat:'Tragos',      name:'Pisco Sour',           desc:'Pisco quebranta, limón, jarabe',     price:25, emoji:'🍸'},
+  {id:'chilcano',     cat:'Tragos',      name:'Chilcano',             desc:'Pisco, ginger ale, limón',           price:22, emoji:'🍹'},
+  {id:'cuba-libre',   cat:'Tragos',      name:'Cuba Libre',           desc:'Ron, cola, limón',                   price:22, emoji:'🥃'},
+  {id:'mojito',       cat:'Tragos',      name:'Mojito',               desc:'Ron, hierbabuena, limón, soda',      price:25, emoji:'🍹'},
+  {id:'machu-picchu', cat:'Tragos',      name:'Machu Picchu',         desc:'Pisco, granadina, naranja, menta',   price:24, emoji:'🍹'},
+  {id:'tequila',      cat:'Shots',       name:'Shot de tequila',      desc:'Con sal y limón',                    price:12, emoji:'🥃'},
+  {id:'jager',        cat:'Shots',       name:'Shot de Jägermeister', desc:'Bien helado',                        price:14, emoji:'🥃'},
+  {id:'agua',         cat:'Sin alcohol', name:'Agua',                 desc:'Botella 500 ml',                     price:6,  emoji:'💧'},
+  {id:'inca-kola',    cat:'Sin alcohol', name:'Inca Kola',            desc:'Botella 500 ml',                     price:7,  emoji:'🥤'},
+  {id:'red-bull',     cat:'Sin alcohol', name:'Red Bull',             desc:'Lata 250 ml',                        price:12, emoji:'⚡'},
+];
+
+/* ---------------- Datos ---------------- */
+const LS = (() => { try { localStorage.setItem('_t','1'); localStorage.removeItem('_t'); return true; } catch(e){ return false; } })();
+let memory = null, memoryMine = [];
+
+function fresh(){ return { menu: MENU_INICIAL.map(m => ({...m, available:true})), orders: [], nextNum: 1 }; }
+function load(){
+  if (LS) { try { const s = JSON.parse(localStorage.getItem(STORE_KEY)); if (s && s.menu && s.orders) return s; } catch(e){} }
+  return memory || fresh();
+}
+let state = load();
+function commit(){
+  if (LS) localStorage.setItem(STORE_KEY, JSON.stringify(state)); else memory = state;
+  onState();
+}
+function getMine(){ if (LS) { try { return JSON.parse(localStorage.getItem(MINE_KEY)) || []; } catch(e){ return []; } } return memoryMine; }
+function addMine(id){ const m = getMine(); m.push(id); if (LS) localStorage.setItem(MINE_KEY, JSON.stringify(m)); else memoryMine = m; }
+
+window.addEventListener('storage', e => {
+  if (e.key === STORE_KEY || e.key === MINE_KEY || e.key === null) { state = load(); onState(); }
+});
+
+/* ---------------- Utilidades ---------------- */
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => 'S/ ' + Number(n).toFixed(2);
+const item = id => state.menu.find(m => m.id === id);
+const sumItems = items => items.reduce((a, l) => a + l.qty * l.price, 0);
+const countItems = items => items.reduce((a, l) => a + l.qty, 0);
+function ago(t){
+  const m = Math.floor((Date.now() - t) / 60000);
+  return m < 1 ? 'recién' : 'hace ' + m + ' min';
+}
+function newCode(){
+  const abc = 'ACEFHJKMNPRTUVWXY3479';
+  let c = ''; for (let i = 0; i < 3; i++) c += abc[Math.floor(Math.random() * abc.length)];
+  return c;
+}
+function lineText(l){ return l.qty + '× ' + l.name; }
+function waitMinutes(order){
+  const ahead = state.orders.filter(o => (o.status === 'nuevo' || o.status === 'preparando') && o.t.created < order.t.created).length;
+  const base = order.status === 'preparando' ? 2 : 3;
+  return Math.max(1, Math.round(base + ahead * 1.5));
+}
+
+/* ---------------- Sonido y vibración ---------------- */
+let audio = null;
+document.addEventListener('pointerdown', () => {
+  if (!audio) { try { audio = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} }
+  if (audio && audio.state === 'suspended') audio.resume();
+}, {capture:true});
+function tone(freqs, gap = 0.16){
+  if (!audio) return;
+  freqs.forEach((f, i) => {
+    const o = audio.createOscillator(), g = audio.createGain();
+    const t = audio.currentTime + i * gap;
+    o.type = 'sine'; o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.25, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + gap * 0.95);
+    o.connect(g).connect(audio.destination); o.start(t); o.stop(t + gap);
+  });
+}
+const soundReady = () => tone([660, 880, 1175, 1568], 0.14);
+const soundNewOrder = () => tone([880, 660], 0.12);
+const buzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch(e){} };
+
+/* ---------------- Estado de pantallas ---------------- */
+const cli = { screen:'carta', cat:'Todos', cart:{}, name:'', pay:'yape', paying:false, alert:null };
+let demoTab = 'cliente';
+let toastTimer = null;
+let seen = {};          // estado de mis pedidos que el cliente ya conoce
+let lastNew = null;     // cantidad de pedidos nuevos que vio la barra
+state.orders.forEach(o => seen[o.id] = o.status);
+
+function route(){ return (location.hash.slice(1) || 'inicio').toLowerCase(); }
+
+/* ---------------- Acciones ---------------- */
+function createOrder({name, lines, pay, mine}){
+  const o = {
+    id: 'o' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    num: state.nextNum++, code: newCode(),
+    name: name || 'Cliente', pay, lines,
+    total: sumItems(lines), status: 'nuevo',
+    t: { created: Date.now() }
+  };
+  state.orders.push(o);
+  seen[o.id] = 'nuevo';
+  if (mine) addMine(o.id);
+  commit();
+  return o;
+}
+const NOMBRES = ['Ana','Diego','Valeria','Renzo','Camila','Joaquín','Lucía','Mateo','Fiorella','Sebastián','Andrea','Piero'];
+function fakeOrder(){
+  const avail = state.menu.filter(m => m.available);
+  if (!avail.length) return;
+  const n = 1 + Math.floor(Math.random() * 3), lines = [];
+  for (let i = 0; i < n; i++) {
+    const m = avail[Math.floor(Math.random() * avail.length)];
+    const ex = lines.find(l => l.id === m.id);
+    if (ex) ex.qty++; else lines.push({id:m.id, name:m.name, price:m.price, qty:1 + (Math.random() < .25 ? 1 : 0)});
+  }
+  createOrder({ name: NOMBRES[Math.floor(Math.random() * NOMBRES.length)], lines, pay: ['yape','plin','tarjeta'][Math.floor(Math.random()*3)], mine:false });
+}
+function setStatus(id, status){
+  const o = state.orders.find(x => x.id === id); if (!o) return;
+  o.status = status;
+  const key = {preparando:'started', listo:'ready', entregado:'delivered'}[status];
+  if (key) o.t[key] = Date.now();
+  commit();
+}
+
+const actions = {
+  go: d => { location.hash = d.to; },
+  tab: d => { demoTab = d.tab; if (d.tab === 'cliente') document.getElementById('toast').classList.remove('on'); render(); },
+  cat: d => { cli.cat = d.cat; render(); },
+  add: d => { const m = item(d.id); if (!m || !m.available) return; cli.cart[d.id] = (cli.cart[d.id] || 0) + 1; buzz(10); render(); },
+  sub: d => { if (!cli.cart[d.id]) return; cli.cart[d.id]--; if (!cli.cart[d.id]) delete cli.cart[d.id]; render(); },
+  screen: d => { cli.screen = d.s; render(); scrollViewTop(); },
+  pay: d => { cli.pay = d.p; render(); },
+  checkout: () => {
+    const lines = cartLines(); if (!lines.length || cli.paying) return;
+    cli.paying = true; render();
+    setTimeout(() => {
+      createOrder({ name: cli.name.trim(), lines, pay: cli.pay, mine: true });
+      cli.cart = {}; cli.paying = false; cli.screen = 'pedidos';
+      render(); scrollViewTop();
+    }, 1400);
+  },
+  closeAlert: () => { cli.alert = null; render(); },
+  start: d => setStatus(d.id, 'preparando'),
+  ready: d => setStatus(d.id, 'listo'),
+  deliver: d => setStatus(d.id, 'entregado'),
+  fake: () => fakeOrder(),
+  price: d => { const m = item(d.id); m.price = Math.max(1, m.price + Number(d.delta)); commit(); },
+  avail: d => { const m = item(d.id); m.available = !m.available; if (!m.available) delete cli.cart[m.id]; commit(); },
+  reset: () => {
+    if (!confirm('¿Borrar todos los pedidos y volver la carta a como estaba?')) return;
+    state = fresh(); seen = {}; lastNew = null; cli.cart = {}; cli.alert = null;
+    if (LS) localStorage.setItem(MINE_KEY, '[]'); else memoryMine = [];
+    commit();
+  },
+};
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]');
+  if (!el) return;
+  e.preventDefault();
+  const fn = actions[el.dataset.act];
+  if (fn) fn(el.dataset);
+});
+document.addEventListener('input', e => {
+  if (e.target.dataset.key === 'name') cli.name = e.target.value;
+});
+window.addEventListener('hashchange', () => { document.getElementById('toast').classList.remove('on'); render(); window.scrollTo(0, 0); });
+
+function cartLines(){
+  return Object.entries(cli.cart).map(([id, qty]) => { const m = item(id); return m && m.available ? {id, name:m.name, price:m.price, qty} : null; }).filter(Boolean);
+}
+function scrollViewTop(){
+  document.querySelectorAll('[data-scroll="cliente"]').forEach(n => n.scrollTop = 0);
+  if (route() === 'cliente' || (route() === 'demo' && innerWidth < 1150)) window.scrollTo(0, 0);
+}
+
+/* ---------------- Cuando cambian los datos ---------------- */
+function onState(){
+  const r = route();
+  // Aviso al cliente: alguno de mis pedidos pasó a "listo"
+  const mine = new Set(getMine());
+  let readyNow = null;
+  state.orders.forEach(o => {
+    if (mine.has(o.id) && o.status === 'listo' && seen[o.id] !== 'listo') readyNow = o;
+    seen[o.id] = o.status;
+  });
+  if (readyNow && (r === 'cliente' || r === 'demo')) {
+    cli.alert = readyNow.id; cli.alertAnim = true;
+    document.querySelectorAll('[data-scroll="cliente"]').forEach(n => n.scrollTop = 0);
+    soundReady(); buzz([300, 120, 300, 120, 600]);
+    if (r === 'demo' && demoTab !== 'cliente') showToast('📲 Al cliente le llegó el aviso: ¡pedido #' + readyNow.num + ' listo!');
+  }
+  // Sonido en la barra cuando entra un pedido nuevo
+  const nNew = state.orders.filter(o => o.status === 'nuevo').length;
+  if (lastNew !== null && nNew > lastNew && (r === 'barra' || r === 'demo')) soundNewOrder();
+  lastNew = nNew;
+  render();
+}
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.remove('on'); void el.offsetWidth; el.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('on'), 3500);
+}
+
+/* =====================================================================
+   VISTAS
+   ===================================================================== */
+const LOGO = '<div class="logo">al<b>·</b>toque</div>';
+
+function viewInicio(){
+  return `<div class="home">
+    ${LOGO}
+    <div class="hero">
+      <span class="tag">Demo · versión de prueba</span>
+      <h1>Tu trago,<br><span>sin colas.</span></h1>
+      <p>Pide y paga desde tu celular. Te avisamos cuando tu trago esté listo. Tú sigues bailando y solo vas a recogerlo.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><div><b>Escanea el QR</b><div class="muted small">Sin descargar nada. Se abre en el navegador.</div></div></div>
+      <div class="step"><div class="n">2</div><div><b>Pide y paga</b><div class="muted small">Con Yape, Plin o tarjeta.</div></div></div>
+      <div class="step"><div class="n">3</div><div><b>Te avisamos y lo recoges</b><div class="muted small">Tu celular suena y vibra cuando está listo.</div></div></div>
+    </div>
+    <button class="btn pri full" data-act="go" data-to="demo" style="margin-top:12px;font-size:17px">▶ Ver la demo completa</button>
+    <p class="muted small" style="text-align:center;margin:10px 0 18px">Cliente, barra y dueño en una sola pantalla, conectados en vivo.</p>
+    <div class="section-t">O entra por separado</div>
+    <div class="roles">
+      <button class="btn" data-act="go" data-to="cliente"><span>📱</span>Cliente</button>
+      <button class="btn" data-act="go" data-to="barra"><span>🍸</span>Barra</button>
+      <button class="btn" data-act="go" data-to="dueno"><span>📊</span>Dueño</button>
+    </div>
+    <p class="note" style="margin-top:24px">Tip: abre "Cliente" en una pestaña y "Barra" en otra del mismo navegador. Se comunican entre sí.</p>
+  </div>`;
+}
+
+/* ---------- Cliente ---------- */
+function viewCliente(){
+  const mineIds = new Set(getMine());
+  const myOrders = state.orders.filter(o => mineIds.has(o.id));
+  const activeMine = myOrders.filter(o => o.status !== 'entregado').length;
+  let body = '';
+
+  if (cli.paying) {
+    body = `<div class="vbody" style="display:grid;place-items:center;text-align:center;padding-top:80px">
+      <div><div class="spinner"></div><b style="font-size:20px">Procesando tu pago…</b><p class="muted small" style="margin-top:6px">${cli.pay === 'tarjeta' ? 'Tarjeta' : cli.pay === 'plin' ? 'Plin' : 'Yape'} · pago simulado</p></div>
+    </div>`;
+  } else if (cli.screen === 'carrito') {
+    body = viewCarrito();
+  } else if (cli.screen === 'pedidos') {
+    body = viewMisPedidos(myOrders);
+  } else {
+    body = viewCarta();
+  }
+
+  const lines = cartLines();
+  const showCartBtn = cli.screen === 'carta' && lines.length && !cli.paying;
+  const alertOrder = cli.alert && state.orders.find(o => o.id === cli.alert);
+
+  return `<div class="view view-root">
+    <div class="vhead">
+      ${LOGO}
+      <div class="place small" style="margin-left:auto;text-align:right"><b>${LOCAL.nombre}</b><span class="muted">${LOCAL.barra}</span></div>
+    </div>
+    ${cli.screen === 'carta' && !cli.paying ? catsBar() : ''}
+    ${body}
+    <div class="sticky-bottom">
+      ${showCartBtn ? `<button class="btn pri full" data-act="screen" data-s="carrito" style="justify-content:space-between;padding:16px 22px"><span>Ver pedido · ${countItems(lines)}</span><span>${money(sumItems(lines))}</span></button>` : ''}
+      ${cli.paying || cli.screen === 'carrito' ? '' : `<div class="nav">
+        <button class="${cli.screen === 'carta' ? 'on' : ''}" data-act="screen" data-s="carta">🍹 Carta</button>
+        <button class="${cli.screen === 'pedidos' ? 'on' : ''}" data-act="screen" data-s="pedidos">🧾 Mis pedidos${activeMine ? `<span class="badge">${activeMine}</span>` : ''}</button>
+      </div>`}
+    </div>
+    ${alertOrder ? `<div class="overlay ${cli.alertAnim ? 'anim' : ''}">
+      <div class="em">🍹</div>
+      <h2>¡Tu pedido #${alertOrder.num} está listo!</h2>
+      <p>Recógelo en <b>${LOCAL.barra}</b> y muestra este código:</p>
+      <div class="code" style="font-size:34px;margin-bottom:24px">${alertOrder.code}</div>
+      <button class="btn ok" data-act="closeAlert" style="min-width:200px">Voy para allá</button>
+    </div>` : ''}
+  </div>`;
+}
+function catsBar(){
+  const cats = ['Todos', ...new Set(state.menu.map(m => m.cat))];
+  return `<div class="cats">${cats.map(c => `<button class="chip ${cli.cat === c ? 'on' : ''}" data-act="cat" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div>`;
+}
+function viewCarta(){
+  const list = state.menu.filter(m => cli.cat === 'Todos' || m.cat === cli.cat);
+  return `<div class="vbody">${list.map(m => {
+    const q = cli.cart[m.id] || 0;
+    return `<div class="item ${m.available ? '' : 'off'}">
+      <div class="em">${m.emoji}</div>
+      <div class="info"><b>${esc(m.name)}</b><div class="d">${esc(m.desc)}</div><span class="price">${money(m.price)}</span></div>
+      ${m.available ? `<div class="qty">
+        ${q ? `<button data-act="sub" data-id="${m.id}" aria-label="Quitar">−</button><span>${q}</span>` : ''}
+        <button class="add" data-act="add" data-id="${m.id}" aria-label="Agregar">+</button>
+      </div>` : `<span class="agotado">Agotado</span>`}
+    </div>`;
+  }).join('')}</div>`;
+}
+function viewCarrito(){
+  const lines = cartLines();
+  if (!lines.length) return `<div class="vbody"><div class="empty"><div class="big">🛒</div>Tu pedido está vacío.<br><br><button class="btn pri" data-act="screen" data-s="carta">Ver la carta</button></div></div>`;
+  const pays = [['yape','💜','Yape'],['plin','💙','Plin'],['tarjeta','💳','Tarjeta']];
+  return `<div class="vbody">
+    <button class="btn ghost" data-act="screen" data-s="carta" style="padding:8px 14px;font-size:14px">← Seguir pidiendo</button>
+    <div class="section-t">Tu pedido</div>
+    ${lines.map(l => `<div class="item">
+      <div class="em">${item(l.id).emoji}</div>
+      <div class="info"><b>${esc(l.name)}</b><span class="price">${money(l.price * l.qty)}</span></div>
+      <div class="qty"><button data-act="sub" data-id="${l.id}">−</button><span>${l.qty}</span><button class="add" data-act="add" data-id="${l.id}">+</button></div>
+    </div>`).join('')}
+    <label class="field"><span>Tu nombre (para que el bartender te ubique)</span>
+      <input data-key="name" value="${esc(cli.name)}" placeholder="Ej: Chano" maxlength="20" autocomplete="given-name"></label>
+    <div class="section-t">¿Cómo pagas?</div>
+    <div class="pays">${pays.map(([k, i, t]) => `<button class="pay ${cli.pay === k ? 'on' : ''}" data-act="pay" data-p="${k}"><i>${i}</i>${t}</button>`).join('')}</div>
+    <div class="row" style="margin:22px 0 14px"><span class="muted">Total</span><span class="total">${money(sumItems(lines))}</span></div>
+    <button class="btn pri full" data-act="checkout" style="font-size:17px;padding:17px">Pagar ${money(sumItems(lines))}</button>
+    <p class="note">Esto es una demo: el pago es simulado y no se cobra nada.</p>
+  </div>`;
+}
+function viewMisPedidos(myOrders){
+  if (!myOrders.length) return `<div class="vbody"><div class="empty"><div class="big">🧾</div>Todavía no has pedido nada.<br><br><button class="btn pri" data-act="screen" data-s="carta">Pedir mi primer trago</button></div></div>`;
+  const sorted = [...myOrders].sort((a, b) => {
+    const rank = s => ({listo:0, preparando:1, nuevo:2, entregado:3}[s]);
+    return rank(a.status) - rank(b.status) || b.t.created - a.t.created;
+  });
+  return `<div class="vbody">${sorted.map(o => {
+    const step = {nuevo:1, preparando:2, listo:3, entregado:3}[o.status];
+    const cls = o.status === 'listo' ? 'ready' : o.status === 'entregado' ? 'done' : '';
+    let status;
+    if (o.status === 'nuevo') status = `✅ Pagado. En cola · unos <b>${waitMinutes(o)} min</b>`;
+    else if (o.status === 'preparando') status = `🍸 Lo están preparando · unos <b>${waitMinutes(o)} min</b>`;
+    else if (o.status === 'listo') status = `🎉 ¡Listo! Recógelo en ${LOCAL.barra}`;
+    else status = '¡Entregado! Salud 🥂';
+    return `<div class="order ${cls}">
+      <div class="row"><div><div class="muted small">Pedido</div><div class="num">#${o.num}</div></div>
+        <div style="text-align:right"><div class="muted small" style="margin-bottom:4px">Tu código</div><span class="code">${o.code}</span></div></div>
+      ${o.status !== 'entregado' ? `<div class="track"><div class="on"></div><div class="${step >= 2 ? 'on' : ''}"></div><div class="${step >= 3 ? 'on' : ''}"></div></div>
+      <div class="track-l"><span class="on">Pagado</span><span class="${step >= 2 ? 'on' : ''}">Preparando</span><span class="${step >= 3 ? 'on' : ''}">Listo</span></div>` : ''}
+      <div class="status">${status}</div>
+      <div class="lines">${o.lines.map(lineText).map(esc).join(' · ')} — ${money(o.total)}</div>
+    </div>`;
+  }).join('')}
+  <p class="note">Cuando tu pedido esté listo, tu celular va a sonar y vibrar. Mientras tanto, sigue bailando 💃</p></div>`;
+}
+
+/* ---------- Barra ---------- */
+function viewBarra(){
+  const by = s => state.orders.filter(o => o.status === s).sort((a, b) => a.t.created - b.t.created);
+  const nuevos = by('nuevo'), prep = by('preparando'), listos = by('listo');
+  const ticket = (o, kind) => `<div class="tk ${kind}">
+    <div class="top"><b>#${o.num} · ${esc(o.name)}</b><span class="muted small">${ago(o.t.created)}</span></div>
+    <ul>${o.lines.map(l => `<li><i>${l.qty}×</i>${esc(l.name)}</li>`).join('')}</ul>
+    ${kind === '' ? `<button class="btn full" style="background:var(--ac2);color:#2a1d00" data-act="start" data-id="${o.id}">Empezar a preparar</button>` : ''}
+    ${kind === 'prep' ? `<button class="btn ok full" data-act="ready" data-id="${o.id}">¡Listo! Avisar al cliente</button>` : ''}
+    ${kind === 'lst' ? `<div class="row" style="margin-bottom:10px"><span class="muted small">Pídele que te muestre:</span><span class="code">${o.code}</span></div>
+      <button class="btn full" data-act="deliver" data-id="${o.id}">Entregado ✓</button>` : ''}
+  </div>`;
+  const col = (title, list, kind, emptyMsg) => `<div>
+    <div class="col-h">${title}<span class="cnt">${list.length}</span></div>
+    ${list.length ? list.map(o => ticket(o, kind)).join('') : `<div class="blank">${emptyMsg}</div>`}
+  </div>`;
+  return `<div class="view view-root">
+    <div class="vhead">
+      <div class="place"><b style="font-size:20px">🍸 ${LOCAL.barra}</b><span class="muted small">${LOCAL.nombre} · pantalla del bartender</span></div>
+      <button class="btn ghost" data-act="fake" style="margin-left:auto;padding:9px 14px;font-size:13px">+ Pedido de prueba</button>
+    </div>
+    <div class="vbody bar-cols">
+      ${col('🔔 Nuevos', nuevos, '', 'No hay pedidos nuevos')}
+      ${col('🍸 Preparando', prep, 'prep', 'Nada en preparación')}
+      ${col('✅ Listos para recoger', listos, 'lst', 'Nadie esperando')}
+    </div>
+  </div>`;
+}
+
+/* ---------- Dueño ---------- */
+function viewDueno(){
+  const paid = state.orders;
+  const ventas = paid.reduce((a, o) => a + o.total, 0);
+  const ticketProm = paid.length ? ventas / paid.length : 0;
+  const withReady = paid.filter(o => o.t.ready);
+  const espera = withReady.length ? withReady.reduce((a, o) => a + (o.t.ready - o.t.created), 0) / withReady.length / 60000 : null;
+  const tragos = paid.reduce((a, o) => a + countItems(o.lines), 0);
+
+  const count = {};
+  paid.forEach(o => o.lines.forEach(l => count[l.name] = (count[l.name] || 0) + l.qty));
+  const top = Object.entries(count).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const max = top.length ? top[0][1] : 1;
+
+  return `<div class="view view-root">
+    <div class="vhead"><div class="place"><b style="font-size:20px">📊 Panel del dueño</b><span class="muted small">${LOCAL.nombre} · esta noche</span></div></div>
+    <div class="vbody">
+      <div class="kpis">
+        <div class="kpi hl"><div class="muted small">Ventas por la app</div><div class="v">${money(ventas)}</div></div>
+        <div class="kpi"><div class="muted small">Pedidos</div><div class="v">${paid.length}</div></div>
+        <div class="kpi"><div class="muted small">Tragos vendidos</div><div class="v">${tragos}</div></div>
+        <div class="kpi"><div class="muted small">Ticket promedio</div><div class="v">${money(ticketProm)}</div></div>
+        <div class="kpi"><div class="muted small">Espera promedio</div><div class="v">${espera === null ? '—' : espera < 1 ? '< 1 min' : espera.toFixed(1) + ' min'}</div></div>
+        <div class="kpi"><div class="muted small">Comisión Al Toque</div><div class="v">${money(paid.length * COMISION)}</div><div class="muted small">S/ ${COMISION} por pedido</div></div>
+      </div>
+
+      <div class="section-t">Lo más pedido</div>
+      ${top.length ? `<div class="card bars">${top.map(([n, c]) => `<div class="b"><div class="row small"><b>${esc(n)}</b><span class="muted">${c}</span></div><div class="track2"><div class="fill" style="width:${Math.round(c / max * 100)}%"></div></div></div>`).join('')}</div>`
+        : `<div class="blank">Todavía no hay ventas esta noche.</div>`}
+
+      <div class="section-t">Carta y precios</div>
+      <p class="muted small" style="margin-bottom:6px">Los cambios se ven al toque en el celular del cliente.</p>
+      ${state.menu.map(m => `<div class="mi">
+        <span>${m.emoji}</span><span class="nm">${esc(m.name)}</span>
+        <div class="pp"><button data-act="price" data-id="${m.id}" data-delta="-1" aria-label="Bajar precio">−</button><span>${money(m.price)}</span><button data-act="price" data-id="${m.id}" data-delta="1" aria-label="Subir precio">+</button></div>
+        <button class="sw ${m.available ? '' : 'off'}" data-act="avail" data-id="${m.id}">${m.available ? 'Disponible' : 'Agotado'}</button>
+      </div>`).join('')}
+
+      <button class="btn ghost full" data-act="reset" style="margin-top:22px">↺ Reiniciar demo</button>
+    </div>
+  </div>`;
+}
+
+/* ---------- Demo: las 3 vistas juntas ---------- */
+function viewDemo(){
+  const nNew = state.orders.filter(o => o.status === 'nuevo').length;
+  const tabs = [['cliente','📱 Cliente'],['barra','🍸 Barra' + (nNew ? ` <span class="badge">${nNew}</span>` : '')],['dueno','📊 Dueño']];
+  return `<div class="demo-top">
+      <a href="#inicio" class="logo" style="color:inherit;text-decoration:none">al<b>·</b>toque</a>
+      <span class="tag">Demo en vivo</span>
+      <div class="tabs">${tabs.map(([k, t]) => `<button class="chip ${demoTab === k ? 'on' : ''}" data-act="tab" data-tab="${k}">${t}</button>`).join('')}</div>
+    </div>
+    <div class="demo-hint">Pide como cliente → prepáralo en la barra → mira cómo le llega el aviso al cliente.</div>
+    <div class="panels">
+      <div class="panel ${demoTab === 'cliente' ? 'on' : ''}"><div class="panel-title">📱 Celular del cliente</div><div class="frame" data-scroll="cliente">${viewCliente()}</div></div>
+      <div class="panel wide ${demoTab === 'barra' ? 'on' : ''}"><div class="panel-title">🍸 Pantalla de la barra</div><div class="frame" data-scroll="barra">${viewBarra()}</div></div>
+      <div class="panel ${demoTab === 'dueno' ? 'on' : ''}"><div class="panel-title">📊 Panel del dueño</div><div class="frame" data-scroll="dueno">${viewDueno()}</div></div>
+    </div>
+`;
+}
+
+/* ---------------- Render ---------------- */
+const app = document.getElementById('app');
+function render(){
+  const r = route();
+  // Guardar foco y scroll para que nada "salte" al actualizar
+  const a = document.activeElement;
+  const key = a && a.dataset ? a.dataset.key : null;
+  const sel = key ? [a.selectionStart, a.selectionEnd] : null;
+  const scrolls = {};
+  document.querySelectorAll('[data-scroll]').forEach(n => scrolls[n.dataset.scroll] = n.scrollTop);
+
+  let html;
+  if (r === 'cliente') html = `<div data-scroll="cliente">${viewCliente()}</div>`;
+  else if (r === 'barra') html = `<div class="route-barra">${viewBarra()}</div>`;
+  else if (r === 'dueno') html = `<div style="max-width:640px;margin:0 auto">${viewDueno()}</div>`;
+  else if (r === 'demo') html = viewDemo();
+  else html = viewInicio();
+  app.innerHTML = html;
+  cli.alertAnim = false;
+
+  document.querySelectorAll('[data-scroll]').forEach(n => { if (scrolls[n.dataset.scroll]) n.scrollTop = scrolls[n.dataset.scroll]; });
+  if (key) {
+    const n = app.querySelector(`[data-key="${key}"]`);
+    if (n) { n.focus({preventScroll:true}); try { n.setSelectionRange(sel[0], sel[1]); } catch(e){} }
+  }
+}
+// Actualiza los "hace X min" y los tiempos de espera
+setInterval(() => { if (!document.activeElement || !document.activeElement.dataset || !document.activeElement.dataset.key) render(); }, 20000);
+render();
+</script>
+</body>
+</html>
