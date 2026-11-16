@@ -266,6 +266,7 @@ const buzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch(e){
 /* ---------------- Estado de pantallas ---------------- */
 const cli = { screen:'carta', cat:'Todos', cart:{}, name:'', pay:'yape', paying:false, alert:null };
 let demoTab = 'cliente';
+let resetArmed = false;
 let toastTimer = null;
 let seen = {};          // estado de mis pedidos que el cliente ya conoce
 let lastNew = null;     // cantidad de pedidos nuevos que vio la barra
@@ -333,7 +334,8 @@ const actions = {
   price: d => { const m = item(d.id); m.price = Math.max(1, m.price + Number(d.delta)); commit(); },
   avail: d => { const m = item(d.id); m.available = !m.available; if (!m.available) delete cli.cart[m.id]; commit(); },
   reset: () => {
-    if (!confirm('¿Borrar todos los pedidos y volver la carta a como estaba?')) return;
+    if (!resetArmed) { resetArmed = true; render(); setTimeout(() => { resetArmed = false; render(); }, 4000); return; }
+    resetArmed = false;
     state = fresh(); seen = {}; lastNew = null; cli.cart = {}; cli.alert = null;
     if (LS) localStorage.setItem(MINE_KEY, '[]'); else memoryMine = [];
     commit();
@@ -597,7 +599,7 @@ function viewDueno(){
         <button class="sw ${m.available ? '' : 'off'}" data-act="avail" data-id="${m.id}">${m.available ? 'Disponible' : 'Agotado'}</button>
       </div>`).join('')}
 
-      <button class="btn ghost full" data-act="reset" style="margin-top:22px">↺ Reiniciar demo</button>
+      <button class="btn ${resetArmed ? 'pri' : 'ghost'} full" data-act="reset" style="margin-top:22px">${resetArmed ? '¿Seguro? Toca otra vez para borrar todo' : '↺ Reiniciar demo'}</button>
     </div>
   </div>`;
 }
