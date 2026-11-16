@@ -8,11 +8,12 @@
 <style>
   :root{
     --bg:#120d1d; --s1:#1d1630; --s2:#2a2142; --s3:#3a2f5a;
-    --tx:#f7f2ff; --mu:#a99cc4; --ac:#ff5a36; --ac2:#ffc93c; --ok:#2fd39a; --warn:#ffb020;
+    --tx:#f7f2ff; --mu:#a99cc4; --ac:#ff5a36; --ac2:#ffc93c; --ok:#2fd39a; --warn:#ffb020; --bad:#ff4d6d;
     --r:16px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  body{padding-top:env(safe-area-inset-top)}
   button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
   input{font:inherit}
   .logo{font-weight:900;letter-spacing:-.04em;font-size:22px;white-space:nowrap}
@@ -23,12 +24,16 @@
   .btn:active{transform:scale(.97)}
   .btn.pri{background:var(--ac);color:#fff}
   .btn.ok{background:var(--ok);color:#06281c}
+  .btn.yel{background:var(--ac2);color:#2a1d00}
   .btn.ghost{background:transparent;border:1px solid var(--s3)}
   .btn.full{width:100%}
-  .btn[disabled]{opacity:.5;pointer-events:none}
+  .btn.sm{padding:9px 14px;font-size:13px}
+  .btn[disabled]{opacity:.45;pointer-events:none}
+  .link{color:var(--mu);font-size:13px;font-weight:700;text-decoration:underline;padding:6px}
   .chip{padding:8px 14px;border-radius:999px;background:var(--s1);font-weight:700;font-size:14px;white-space:nowrap}
   .chip.on{background:var(--tx);color:var(--bg)}
   .card{background:var(--s1);border-radius:var(--r);padding:16px}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
 
   /* ---------- Inicio ---------- */
   .home{max-width:560px;margin:0 auto;padding:28px 20px 48px}
@@ -36,7 +41,7 @@
   .hero h1{font-size:44px;line-height:1;font-weight:900;letter-spacing:-.03em;margin:18px 0 14px}
   .hero h1 span{color:var(--ac)}
   .hero p{font-size:18px;color:var(--mu);line-height:1.45}
-  .steps{display:grid;gap:10px;margin:22px 0}
+  .steps{display:grid;gap:12px;margin:22px 0}
   .step{display:flex;gap:14px;align-items:center}
   .step .n{flex:none;width:36px;height:36px;border-radius:50%;background:var(--ac2);color:#2a1d00;font-weight:900;display:grid;place-items:center}
   .roles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
@@ -52,26 +57,33 @@
   .panel{display:none;width:100%;max-width:480px}
   .panel.on{display:block}
   .panel-title{display:none}
+  .frame{position:relative}
   @media (min-width:1150px){
     .demo-top .tabs{display:none}
     .panels{padding:20px}
     .panel{display:block;width:390px;flex:none}
     .panel.wide{width:520px}
     .panel-title{display:block;text-align:center;font-weight:800;margin-bottom:10px;color:var(--mu)}
-    .panel .frame{height:calc(100vh - 150px);min-height:560px;overflow:auto;border-radius:28px;border:1px solid var(--s3);background:var(--bg);position:relative}
+    .panel .frame{height:calc(100vh - 150px);min-height:560px;overflow:auto;border-radius:28px;border:1px solid var(--s3);background:var(--bg)}
   }
-  .frame{position:relative}
-  .toast{display:none;position:fixed;left:0;right:0;margin:0 auto;width:fit-content;top:70px;z-index:60;background:var(--ok);color:#06281c;font-weight:800;padding:12px 18px;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.4);animation:pop .3s;max-width:92vw;text-align:center}
-  .toast.on{display:block}
+  .toast{display:none;position:fixed;left:0;right:0;margin:0 auto;width:fit-content;top:70px;z-index:60;background:var(--ok);color:#06281c;font-weight:800;padding:12px 18px;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.4);max-width:92vw;text-align:center}
+  .toast.on{display:block;animation:pop .3s}
 
   /* ---------- Vistas comunes ---------- */
   .view{min-height:100%;display:flex;flex-direction:column}
+  .view-root{position:relative;min-height:100vh}
+  @media (min-width:1150px){ .panel .view-root{min-height:100%} }
   .vhead{padding:16px 16px 10px;display:flex;align-items:center;gap:12px}
   .vhead .place{line-height:1.2}
   .vhead .place b{display:block}
   .vbody{padding:0 16px 16px;flex:1}
   .sticky-bottom{position:sticky;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 30%)}
   .section-t{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);margin:18px 0 10px}
+  .banner{margin:0 16px 12px;padding:10px 14px;border-radius:14px;font-size:14px;font-weight:700;display:flex;gap:10px;align-items:center}
+  .banner.ok{background:#143327;color:#9ff0cf}
+  .banner.warn{background:#3b2a0c;color:#ffd58a}
+  .banner.bad{background:#3d1220;color:#ffb3c1}
+  .banner.info{background:var(--s2);color:var(--tx);animation:pop .3s}
 
   /* ---------- Cliente ---------- */
   .cats{display:flex;gap:8px;overflow-x:auto;padding:2px 16px 12px;scrollbar-width:none}
@@ -100,34 +112,42 @@
   .pay{padding:14px 6px;border-radius:14px;background:var(--s1);border:2px solid transparent;font-weight:800;font-size:14px;text-align:center}
   .pay.on{border-color:var(--ac);background:var(--s2)}
   .pay i{display:block;font-style:normal;font-size:22px;margin-bottom:4px}
-  .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
   .total{font-size:22px;font-weight:900}
-  .note{font-size:12px;color:var(--mu);text-align:center;margin-top:10px}
+  .note{font-size:12px;color:var(--mu);text-align:center;margin-top:10px;line-height:1.45}
   .order{background:var(--s1);border-radius:20px;padding:18px;margin-bottom:12px;border:2px solid transparent}
   .order.ready{border-color:var(--ok);background:linear-gradient(160deg,#1c3a32,var(--s1) 70%)}
   .order.done{opacity:.6}
   .order .num{font-size:30px;font-weight:900;letter-spacing:-.02em}
-  .code{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-weight:900;font-size:22px;letter-spacing:.18em;background:var(--tx);color:var(--bg);padding:6px 12px;border-radius:10px}
+  .code{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-weight:900;font-size:20px;letter-spacing:.18em;background:var(--tx);color:var(--bg);padding:5px 10px;border-radius:10px}
   .track{display:flex;gap:6px;margin:16px 0 8px}
   .track div{flex:1;height:6px;border-radius:9px;background:var(--s3)}
   .track div.on{background:var(--ac2)}
   .order.ready .track div{background:var(--ok)}
   .track-l{display:flex;justify-content:space-between;font-size:12px;color:var(--mu);font-weight:700}
   .track-l .on{color:var(--tx)}
-  .status{font-size:18px;font-weight:800;margin-top:12px}
+  .status{font-size:17px;font-weight:800;margin-top:12px;line-height:1.35}
   .lines{font-size:14px;color:var(--mu);margin-top:8px;line-height:1.5}
+  .pill{display:inline-block;font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;background:var(--s2);color:var(--mu);text-transform:uppercase;letter-spacing:.05em}
+  .pill.ok{background:#143327;color:var(--ok)}
   .empty{text-align:center;padding:50px 10px;color:var(--mu)}
   .empty .big{font-size:48px;margin-bottom:10px}
-  .spinner{width:46px;height:46px;border-radius:50%;border:4px solid var(--s3);border-top-color:var(--ac);animation:spin 0.8s linear infinite;margin:0 auto 18px}
-  .overlay{position:fixed;inset:0;z-index:30;background:rgba(10,30,24,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px}
+  .spinner{width:46px;height:46px;border-radius:50%;border:4px solid var(--s3);border-top-color:var(--ac);animation:spin .8s linear infinite;margin:0 auto 18px}
+  .qrbox{background:#fff;border-radius:22px;padding:12px;width:min(240px,62vw,34vh);margin:0 auto;box-shadow:0 0 0 6px var(--ok),0 0 40px rgba(47,211,154,.55);animation:glow 1.6s ease-in-out infinite}
+  .qrbox svg{display:block;width:100%;height:auto}
+  .qrbox.sm{width:150px;padding:8px;border-radius:16px;box-shadow:0 0 0 4px var(--ok);animation:none}
+  .overlay{position:fixed;inset:0;z-index:30;background:rgba(9,28,22,.97);display:flex;flex-direction:column;align-items:center;justify-content:safe center;text-align:center;padding:24px;overflow:auto}
   .overlay.anim{animation:pop .35s}
-  .view-root{position:relative;min-height:100vh}
-  @media (min-width:1150px){ .panel .view-root{min-height:100%} .panel .overlay{position:absolute} }
+  .overlay.done{background:rgba(9,28,22,.98)}
+  @media (min-width:1150px){ .panel .overlay{position:absolute} }
+  .overlay .big-n{font-size:52px;font-weight:900;letter-spacing:-.03em;line-height:1}
+  .overlay h2{font-size:24px;font-weight:900;margin:6px 0 4px}
+  .overlay p{color:#bfe9d9;margin-bottom:16px;line-height:1.4}
   .overlay .em{font-size:80px;animation:shake .6s 2}
-  .overlay h2{font-size:30px;font-weight:900;margin:14px 0 6px}
-  .overlay p{color:#bfe9d9;margin-bottom:16px}
 
   /* ---------- Barra ---------- */
+  .sat{background:var(--s1);border-radius:var(--r);padding:12px 14px;margin:0 16px 14px}
+  .sat .meter{height:10px;background:var(--s2);border-radius:9px;overflow:hidden;margin:8px 0 2px}
+  .sat .meter div{height:100%;border-radius:9px;transition:width .4s}
   .bar-cols{display:grid;gap:16px;align-content:start}
   @media (min-width:900px){ .route-barra .bar-cols{grid-template-columns:repeat(3,1fr)} }
   .col-h{display:flex;align-items:center;gap:8px;font-weight:900;margin-bottom:10px}
@@ -140,7 +160,29 @@
   .tk ul{list-style:none;margin:10px 0 12px;font-size:17px;font-weight:700;line-height:1.5}
   .tk ul i{font-style:normal;color:var(--ac2);margin-right:6px}
   .tk .btn{padding:12px}
+  .tk .two{display:flex;gap:8px}
+  .tk .two .btn:first-child{flex:1}
   .blank{color:var(--mu);font-size:14px;padding:14px;border:1px dashed var(--s3);border-radius:var(--r);text-align:center;margin-bottom:10px}
+  .scanbtn{font-size:17px;padding:16px;margin-bottom:12px}
+
+  /* ---------- Escáner ---------- */
+  #scanner{position:fixed;inset:0;z-index:80;background:rgba(8,6,14,.97);display:none;flex-direction:column;align-items:center;overflow:auto;padding:16px 16px 30px}
+  #scanner.on{display:flex}
+  #scanner .box{width:100%;max-width:440px}
+  #scanner .cam{position:relative;width:100%;aspect-ratio:1;border-radius:24px;overflow:hidden;background:#000;margin:10px 0}
+  #scanner video{width:100%;height:100%;object-fit:cover;display:block}
+  #scanner .aim{position:absolute;inset:18%;border:4px solid rgba(255,255,255,.85);border-radius:22px;box-shadow:0 0 0 999px rgba(0,0,0,.35)}
+  #scanner .camerr{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:24px;color:var(--mu);font-size:14px;line-height:1.45}
+  #scanner .camerr.on{display:flex;background:#000}
+  #scan-res{display:none;border-radius:20px;padding:18px;margin:10px 0;text-align:center}
+  #scan-res.on{display:block;animation:pop .25s}
+  #scan-res.good{background:var(--ok);color:#06281c}
+  #scan-res.bad{background:var(--bad);color:#fff}
+  #scan-res .t{font-size:24px;font-weight:900}
+  #scan-res ul{list-style:none;font-size:19px;font-weight:800;margin-top:8px;line-height:1.45}
+  .manual{display:flex;gap:8px;margin:8px 0}
+  .manual input{flex:1;min-width:0;padding:12px 14px;border-radius:14px;border:1px solid var(--s3);background:var(--s1);color:var(--tx);text-transform:uppercase;letter-spacing:.2em;font-weight:900;outline:none}
+  .sim{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
 
   /* ---------- Dueño ---------- */
   .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
@@ -153,34 +195,54 @@
   .bars .fill{height:100%;background:var(--ac2);border-radius:9px}
   .mi{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--s1)}
   .mi .nm{flex:1;min-width:0;font-weight:700}
-  .mi .pp{display:flex;align-items:center;gap:4px}
-  .mi .pp button{width:28px;height:28px;border-radius:50%;background:var(--s2);font-weight:900}
-  .mi .pp span{min-width:64px;text-align:center;font-weight:800}
+  .pp{display:flex;align-items:center;gap:4px}
+  .pp button{width:28px;height:28px;border-radius:50%;background:var(--s2);font-weight:900}
+  .pp span{min-width:64px;text-align:center;font-weight:800}
   .sw{padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;background:#163d30;color:var(--ok);min-width:84px}
-  .sw.off{background:#3d2a0e;color:var(--warn)}
+  .sw.off{background:#3b2a0c;color:var(--warn)}
 
   @keyframes spin{to{transform:rotate(360deg)}}
   @keyframes pop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
   @keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+  @keyframes glow{0%,100%{box-shadow:0 0 0 6px var(--ok),0 0 30px rgba(47,211,154,.45)}50%{box-shadow:0 0 0 10px var(--ac2),0 0 50px rgba(255,201,60,.6)}}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <div id="toast" class="toast" role="status"></div>
 
+<!-- Escáner de QR de la barra (fuera de #app para que la cámara no se corte al actualizar la pantalla) -->
+<div id="scanner" role="dialog" aria-label="Escanear QR del cliente">
+  <div class="box">
+    <div class="row"><b style="font-size:20px">📷 Escanear QR del cliente</b><button class="btn sm ghost" data-act="closeScan">Cerrar</button></div>
+    <div class="cam">
+      <video id="scan-video" playsinline muted></video>
+      <div class="aim"></div>
+      <div class="camerr" id="scan-camerr"></div>
+    </div>
+    <div id="scan-res"></div>
+    <p class="muted small" style="margin-top:6px">¿No lee el QR? Escribe el código que sale debajo del QR del cliente:</p>
+    <div class="manual"><input id="scan-code" maxlength="3" placeholder="ABC" autocomplete="off" aria-label="Código del pedido"><button class="btn ok" data-act="manualCode">Entregar</button></div>
+    <div id="scan-sim"></div>
+  </div>
+</div>
+
+<script src="lib/qrcode.js"></script>
+<script src="lib/jsQR.js"></script>
 <script>
 /* =====================================================================
    AL TOQUE · demo
    Una sola página con 3 vistas que se comunican entre sí:
-   cliente (pide y paga), barra (prepara y avisa) y dueño (ve ventas).
+   cliente (pide y paga), barra (prepara, entrega escaneando QR) y dueño.
    Los datos se guardan en el navegador, así que todo se sincroniza
    entre pestañas del mismo celular o compu. El pago es simulado.
    ===================================================================== */
 
-const STORE_KEY = 'altoque-demo-v1';
-const MINE_KEY  = 'altoque-mis-pedidos-v1';
+const STORE_KEY = 'altoque-demo-v2';
+const MINE_KEY  = 'altoque-mis-pedidos-v2';
 const LOCAL = { nombre: 'Discoteca Demo', barra: 'Barra principal' };
-const COMISION = 1; // S/ por pedido para Al Toque (modelo de negocio de ejemplo)
+const COMISION = 1;       // S/ por pedido que paga el cliente (modelo de ejemplo)
+const SAT_AVISO = 85;     // % desde el que el cliente ve aviso de espera
 
 const MENU_INICIAL = [
   {id:'pilsen',       cat:'Cervezas',    name:'Pilsen',               desc:'Botella 630 ml',                     price:15, emoji:'🍺'},
@@ -202,9 +264,12 @@ const MENU_INICIAL = [
 const LS = (() => { try { localStorage.setItem('_t','1'); localStorage.removeItem('_t'); return true; } catch(e){ return false; } })();
 let memory = null, memoryMine = [];
 
-function fresh(){ return { menu: MENU_INICIAL.map(m => ({...m, available:true})), orders: [], nextNum: 1 }; }
+function fresh(){
+  return { menu: MENU_INICIAL.map(m => ({...m, available:true})), orders: [], nextNum: 1,
+           settings: { capacity: 8, paused: false } };
+}
 function load(){
-  if (LS) { try { const s = JSON.parse(localStorage.getItem(STORE_KEY)); if (s && s.menu && s.orders) return s; } catch(e){} }
+  if (LS) { try { const s = JSON.parse(localStorage.getItem(STORE_KEY)); if (s && s.menu && s.orders && s.settings) return s; } catch(e){} }
   return memory || fresh();
 }
 let state = load();
@@ -225,20 +290,36 @@ const money = n => 'S/ ' + Number(n).toFixed(2);
 const item = id => state.menu.find(m => m.id === id);
 const sumItems = items => items.reduce((a, l) => a + l.qty * l.price, 0);
 const countItems = items => items.reduce((a, l) => a + l.qty, 0);
-function ago(t){
-  const m = Math.floor((Date.now() - t) / 60000);
-  return m < 1 ? 'recién' : 'hace ' + m + ' min';
-}
+const findOrder = id => state.orders.find(o => o.id === id);
+const isActive = o => o.status === 'nuevo' || o.status === 'preparando';
+const isCharged = o => o.status === 'preparando' || o.status === 'listo' || o.status === 'entregado';
+function ago(t){ const m = Math.floor((Date.now() - t) / 60000); return m < 1 ? 'recién' : 'hace ' + m + ' min'; }
 function newCode(){
   const abc = 'ACEFHJKMNPRTUVWXY3479';
-  let c = ''; for (let i = 0; i < 3; i++) c += abc[Math.floor(Math.random() * abc.length)];
+  let c; do { c = ''; for (let i = 0; i < 3; i++) c += abc[Math.floor(Math.random() * abc.length)]; }
+  while (state.orders.some(o => o.code === c && (isActive(o) || o.status === 'listo')));
   return c;
 }
-function lineText(l){ return l.qty + '× ' + l.name; }
+const lineText = l => l.qty + '× ' + l.name;
+
+/* Saturación: cuántos pedidos tiene la barra en cola frente a lo que puede manejar a la vez */
+function saturation(){
+  const active = state.orders.filter(isActive).length;
+  return { active, pct: Math.round(active / state.settings.capacity * 100) };
+}
+function waitForNew(){ return Math.max(2, Math.round(2 + saturation().active * 1.5)); }
 function waitMinutes(order){
-  const ahead = state.orders.filter(o => (o.status === 'nuevo' || o.status === 'preparando') && o.t.created < order.t.created).length;
-  const base = order.status === 'preparando' ? 2 : 3;
-  return Math.max(1, Math.round(base + ahead * 1.5));
+  const ahead = state.orders.filter(o => isActive(o) && o.t.created < order.t.created).length;
+  return Math.max(1, Math.round((order.status === 'preparando' ? 2 : 3) + ahead * 1.5));
+}
+function satColor(p){ return p >= 100 ? 'var(--bad)' : p >= SAT_AVISO ? 'var(--warn)' : 'var(--ok)'; }
+function satLabel(p){ return p >= 100 ? 'Llena' : p >= SAT_AVISO ? 'Muy cargada' : p >= 50 ? 'Movida' : 'Tranquila'; }
+
+/* QR del pedido */
+const qrText = o => 'ALTOQUE:' + o.id + ':' + o.code;
+function qrSvg(text){
+  try { const q = qrcode(0, 'M'); q.addData(text); q.make(); return q.createSvgTag({cellSize:8, margin:2, scalable:true}); }
+  catch(e){ return '<div style="color:#000;padding:30px;font-weight:800">QR no disponible</div>'; }
 }
 
 /* ---------------- Sonido y vibración ---------------- */
@@ -261,15 +342,19 @@ function tone(freqs, gap = 0.16){
 }
 const soundReady = () => tone([660, 880, 1175, 1568], 0.14);
 const soundNewOrder = () => tone([880, 660], 0.12);
+const soundSoft = () => tone([740], 0.12);
+const soundGood = () => tone([988, 1319], 0.1);
+const soundBad = () => tone([220, 180], 0.18);
 const buzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch(e){} };
 
 /* ---------------- Estado de pantallas ---------------- */
-const cli = { screen:'carta', cat:'Todos', cart:{}, name:'', pay:'yape', paying:false, alert:null };
+const cli = { screen:'carta', cat:'Todos', cart:{}, name:'', pay:'yape', paying:false,
+              alert:null, alertAnim:false, delivered:null, notice:null };
 let demoTab = 'cliente';
 let resetArmed = false;
-let toastTimer = null;
-let seen = {};          // estado de mis pedidos que el cliente ya conoce
-let lastNew = null;     // cantidad de pedidos nuevos que vio la barra
+let toastTimer = null, noticeTimer = null, deliveredTimer = null;
+let seen = {};          // último estado conocido de cada pedido
+let lastNew = null;     // pedidos nuevos que vio la barra
 state.orders.forEach(o => seen[o.id] = o.status);
 
 function route(){ return (location.hash.slice(1) || 'inicio').toLowerCase(); }
@@ -302,44 +387,63 @@ function fakeOrder(){
   createOrder({ name: NOMBRES[Math.floor(Math.random() * NOMBRES.length)], lines, pay: ['yape','plin','tarjeta'][Math.floor(Math.random()*3)], mine:false });
 }
 function setStatus(id, status){
-  const o = state.orders.find(x => x.id === id); if (!o) return;
+  const o = findOrder(id); if (!o) return;
   o.status = status;
-  const key = {preparando:'started', listo:'ready', entregado:'delivered'}[status];
+  const key = {preparando:'started', listo:'ready', entregado:'delivered', cancelado:'ended', rechazado:'ended'}[status];
   if (key) o.t[key] = Date.now();
   commit();
 }
 
 const actions = {
   go: d => { location.hash = d.to; },
-  tab: d => { demoTab = d.tab; if (d.tab === 'cliente') document.getElementById('toast').classList.remove('on'); render(); },
+  tab: d => { demoTab = d.tab; if (d.tab === 'cliente') hideToast(); render(); },
   cat: d => { cli.cat = d.cat; render(); },
   add: d => { const m = item(d.id); if (!m || !m.available) return; cli.cart[d.id] = (cli.cart[d.id] || 0) + 1; buzz(10); render(); },
   sub: d => { if (!cli.cart[d.id]) return; cli.cart[d.id]--; if (!cli.cart[d.id]) delete cli.cart[d.id]; render(); },
   screen: d => { cli.screen = d.s; render(); scrollViewTop(); },
   pay: d => { cli.pay = d.p; render(); },
   checkout: () => {
-    const lines = cartLines(); if (!lines.length || cli.paying) return;
+    const lines = cartLines(); if (!lines.length || cli.paying || state.settings.paused) return;
     cli.paying = true; render();
     setTimeout(() => {
+      if (state.settings.paused) { cli.paying = false; render(); return; }
       createOrder({ name: cli.name.trim(), lines, pay: cli.pay, mine: true });
       cli.cart = {}; cli.paying = false; cli.screen = 'pedidos';
       render(); scrollViewTop();
     }, 1400);
   },
+  cancelOrder: d => { const o = findOrder(d.id); if (o && o.status === 'nuevo') setStatus(d.id, 'cancelado'); },
+  showQr: d => { cli.alert = d.id; cli.alertAnim = true; render(); },
   closeAlert: () => { cli.alert = null; render(); },
+  closeDelivered: () => { cli.delivered = null; render(); },
   start: d => setStatus(d.id, 'preparando'),
+  reject: d => setStatus(d.id, 'rechazado'),
   ready: d => setStatus(d.id, 'listo'),
-  deliver: d => setStatus(d.id, 'entregado'),
+  deliverManual: d => setStatus(d.id, 'entregado'),
   fake: () => fakeOrder(),
+  fake5: () => { for (let i = 0; i < 5; i++) fakeOrder(); },
+  pause: () => { state.settings.paused = !state.settings.paused; commit(); },
+  cap: d => { state.settings.capacity = Math.min(40, Math.max(2, state.settings.capacity + Number(d.delta))); commit(); },
   price: d => { const m = item(d.id); m.price = Math.max(1, m.price + Number(d.delta)); commit(); },
   avail: d => { const m = item(d.id); m.available = !m.available; if (!m.available) delete cli.cart[m.id]; commit(); },
   reset: () => {
     if (!resetArmed) { resetArmed = true; render(); setTimeout(() => { resetArmed = false; render(); }, 4000); return; }
     resetArmed = false;
-    state = fresh(); seen = {}; lastNew = null; cli.cart = {}; cli.alert = null;
+    state = fresh(); seen = {}; lastNew = null; cli.cart = {}; cli.alert = null; cli.delivered = null; cli.notice = null;
     if (LS) localStorage.setItem(MINE_KEY, '[]'); else memoryMine = [];
     commit();
   },
+  openScan: () => openScanner(),
+  closeScan: () => closeScanner(),
+  manualCode: () => {
+    const inp = document.getElementById('scan-code');
+    const code = inp.value.trim().toUpperCase();
+    const o = state.orders.find(x => x.code === code && x.status !== 'cancelado' && x.status !== 'rechazado' && x.status !== 'entregado')
+           || state.orders.find(x => x.code === code);
+    inp.value = '';
+    handleScanned(o ? qrText(o) : 'ALTOQUE:?:' + code);
+  },
+  simScan: d => { const o = findOrder(d.id); if (o) handleScanned(qrText(o)); },
 };
 
 document.addEventListener('click', e => {
@@ -349,10 +453,9 @@ document.addEventListener('click', e => {
   const fn = actions[el.dataset.act];
   if (fn) fn(el.dataset);
 });
-document.addEventListener('input', e => {
-  if (e.target.dataset.key === 'name') cli.name = e.target.value;
-});
-window.addEventListener('hashchange', () => { document.getElementById('toast').classList.remove('on'); render(); window.scrollTo(0, 0); });
+document.addEventListener('input', e => { if (e.target.dataset.key === 'name') cli.name = e.target.value; });
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'scan-code') actions.manualCode(); });
+window.addEventListener('hashchange', () => { hideToast(); closeScanner(); render(); window.scrollTo(0, 0); });
 
 function cartLines(){
   return Object.entries(cli.cart).map(([id, qty]) => { const m = item(id); return m && m.available ? {id, name:m.name, price:m.price, qty} : null; }).filter(Boolean);
@@ -365,30 +468,126 @@ function scrollViewTop(){
 /* ---------------- Cuando cambian los datos ---------------- */
 function onState(){
   const r = route();
-  // Aviso al cliente: alguno de mis pedidos pasó a "listo"
+  const clientVisible = r === 'cliente' || r === 'demo';
   const mine = new Set(getMine());
-  let readyNow = null;
   state.orders.forEach(o => {
-    if (mine.has(o.id) && o.status === 'listo' && seen[o.id] !== 'listo') readyNow = o;
+    const before = seen[o.id];
     seen[o.id] = o.status;
+    if (!mine.has(o.id) || before === o.status || !clientVisible) return;
+    if (o.status === 'preparando') {
+      notice('🍸 ¡Ya están preparando tu pedido #' + o.num + '! Se cobró ' + money(o.total) + '.');
+      soundSoft(); buzz(80);
+    } else if (o.status === 'listo') {
+      cli.alert = o.id; cli.alertAnim = true; cli.delivered = null;
+      document.querySelectorAll('[data-scroll="cliente"]').forEach(n => n.scrollTop = 0);
+      soundReady(); buzz([300, 120, 300, 120, 600]);
+      if (r === 'demo' && demoTab !== 'cliente') showToast('📲 Al cliente le llegó el aviso con su QR: ¡pedido #' + o.num + ' listo!');
+    } else if (o.status === 'entregado') {
+      if (cli.alert === o.id) cli.alert = null;
+      cli.delivered = o.id; cli.deliveredAnim = true;
+      clearTimeout(deliveredTimer);
+      deliveredTimer = setTimeout(() => { cli.delivered = null; render(); }, 4000);
+      buzz(60);
+    } else if (o.status === 'rechazado') {
+      notice('😕 La barra no pudo preparar tu pedido #' + o.num + '. No se te cobró nada.');
+      soundBad(); buzz([100, 80, 100]);
+    }
   });
-  if (readyNow && (r === 'cliente' || r === 'demo')) {
-    cli.alert = readyNow.id; cli.alertAnim = true;
-    document.querySelectorAll('[data-scroll="cliente"]').forEach(n => n.scrollTop = 0);
-    soundReady(); buzz([300, 120, 300, 120, 600]);
-    if (r === 'demo' && demoTab !== 'cliente') showToast('📲 Al cliente le llegó el aviso: ¡pedido #' + readyNow.num + ' listo!');
-  }
-  // Sonido en la barra cuando entra un pedido nuevo
   const nNew = state.orders.filter(o => o.status === 'nuevo').length;
   if (lastNew !== null && nNew > lastNew && (r === 'barra' || r === 'demo')) soundNewOrder();
   lastNew = nNew;
   render();
+  refreshScannerList();
+}
+function notice(text){
+  cli.notice = text; clearTimeout(noticeTimer);
+  noticeTimer = setTimeout(() => { cli.notice = null; render(); }, 5000);
 }
 function showToast(msg){
   const el = document.getElementById('toast');
   el.textContent = msg; el.classList.remove('on'); void el.offsetWidth; el.classList.add('on');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('on'), 3500);
+  toastTimer = setTimeout(hideToast, 3500);
+}
+function hideToast(){ document.getElementById('toast').classList.remove('on'); }
+
+/* =====================================================================
+   ESCÁNER (la barra lee el QR del cliente con la cámara)
+   ===================================================================== */
+let stream = null, scanLoop = null, detector = null, scanPausedUntil = 0, resTimer = null;
+const scanCanvas = document.createElement('canvas');
+const scanCtx = scanCanvas.getContext('2d', { willReadFrequently: true });
+
+async function openScanner(){
+  document.getElementById('scanner').classList.add('on');
+  document.getElementById('scan-res').className = '';
+  refreshScannerList();
+  const err = document.getElementById('scan-camerr');
+  err.classList.remove('on');
+  try {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('sin cámara');
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+    const v = document.getElementById('scan-video');
+    v.srcObject = stream; await v.play();
+    if ('BarcodeDetector' in window) { try { detector = new BarcodeDetector({ formats: ['qr_code'] }); } catch(e){ detector = null; } }
+    scanLoop = setInterval(scanFrame, 250);
+  } catch(e) {
+    err.innerHTML = 'No se pudo abrir la cámara en este equipo.<br><br>Usa el código de 3 letras de abajo o, en esta demo, los botones para simular el escaneo.';
+    err.classList.add('on');
+  }
+}
+function closeScanner(){
+  document.getElementById('scanner').classList.remove('on');
+  clearInterval(scanLoop); scanLoop = null;
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+}
+async function scanFrame(){
+  if (Date.now() < scanPausedUntil) return;
+  const v = document.getElementById('scan-video');
+  if (!v.videoWidth) return;
+  try {
+    if (detector) {
+      const codes = await detector.detect(v);
+      if (codes.length) handleScanned(codes[0].rawValue);
+      return;
+    }
+    const w = 480, h = Math.round(v.videoHeight / v.videoWidth * w);
+    scanCanvas.width = w; scanCanvas.height = h;
+    scanCtx.drawImage(v, 0, 0, w, h);
+    const img = scanCtx.getImageData(0, 0, w, h);
+    const code = window.jsQR && jsQR(img.data, w, h, { inversionAttempts: 'dontInvert' });
+    if (code && code.data) handleScanned(code.data);
+  } catch(e){}
+}
+function handleScanned(text){
+  scanPausedUntil = Date.now() + 2500;
+  const m = /^ALTOQUE:([^:]+):(.+)$/.exec(text || '');
+  const o = m && findOrder(m[1]);
+  let good = false, html;
+  if (!m) html = '<div class="t">Ese QR no es de Al Toque</div>';
+  else if (!o || o.code !== m[2]) html = '<div class="t">Código no encontrado</div><div>Revisa que sea un pedido de esta noche.</div>';
+  else if (o.status === 'entregado') html = `<div class="t">⚠️ Este QR ya se usó</div><div>El pedido #${o.num} se entregó ${ago(o.t.delivered)}. No entregues de nuevo.</div>`;
+  else if (o.status === 'cancelado' || o.status === 'rechazado') html = `<div class="t">Pedido #${o.num} anulado</div><div>No se cobró, no hay nada que entregar.</div>`;
+  else if (o.status !== 'listo') html = `<div class="t">#${o.num} todavía no está listo</div><div>Está ${o.status === 'nuevo' ? 'en cola' : 'en preparación'}.</div>`;
+  else {
+    good = true;
+    html = `<div class="t">✓ Entrega a ${esc(o.name)} · #${o.num}</div><ul>${o.lines.map(l => `<li>${esc(lineText(l))}</li>`).join('')}</ul>`;
+    setStatus(o.id, 'entregado');
+  }
+  const res = document.getElementById('scan-res');
+  res.innerHTML = html; res.className = 'on ' + (good ? 'good' : 'bad');
+  good ? (soundGood(), buzz(60)) : (soundBad(), buzz([80, 60, 80]));
+  clearTimeout(resTimer);
+  resTimer = setTimeout(() => { res.className = ''; }, 4000);
+}
+function refreshScannerList(){
+  const box = document.getElementById('scan-sim');
+  if (!box) return;
+  const listos = state.orders.filter(o => o.status === 'listo');
+  box.innerHTML = listos.length
+    ? `<p class="muted small" style="margin-top:14px">Solo para la demo (en un solo celular no puedes escanear tu propia pantalla): simula que el cliente muestra su QR.</p>
+       <div class="sim">${listos.map(o => `<button class="btn sm" data-act="simScan" data-id="${o.id}">Simular QR #${o.num} · ${esc(o.name)}</button>`).join('')}</div>`
+    : '<p class="muted small" style="margin-top:14px">No hay pedidos listos esperando recojo.</p>';
 }
 
 /* =====================================================================
@@ -402,12 +601,13 @@ function viewInicio(){
     <div class="hero">
       <span class="tag">Demo · versión de prueba</span>
       <h1>Tu trago,<br><span>sin colas.</span></h1>
-      <p>Pide y paga desde tu celular. Te avisamos cuando tu trago esté listo. Tú sigues bailando y solo vas a recogerlo.</p>
+      <p>Pide y paga desde tu celular. Cuando tu trago está listo, tu celular vibra y te muestra un QR. Vas a la barra, lo escanean y te vas. Unos segundos.</p>
     </div>
     <div class="steps">
-      <div class="step"><div class="n">1</div><div><b>Escanea el QR</b><div class="muted small">Sin descargar nada. Se abre en el navegador.</div></div></div>
-      <div class="step"><div class="n">2</div><div><b>Pide y paga</b><div class="muted small">Con Yape, Plin o tarjeta.</div></div></div>
-      <div class="step"><div class="n">3</div><div><b>Te avisamos y lo recoges</b><div class="muted small">Tu celular suena y vibra cuando está listo.</div></div></div>
+      <div class="step"><div class="n">1</div><div><b>Escanea el QR del local</b><div class="muted small">Sin descargar nada. Se abre en el navegador.</div></div></div>
+      <div class="step"><div class="n">2</div><div><b>Pide y paga con Yape, Plin o tarjeta</b><div class="muted small">Solo se cobra cuando la barra empieza a prepararlo.</div></div></div>
+      <div class="step"><div class="n">3</div><div><b>Tu celular vibra y te muestra tu QR</b><div class="muted small">Sigues bailando hasta que esté listo.</div></div></div>
+      <div class="step"><div class="n">4</div><div><b>Lo escanean en la barra y te vas</b><div class="muted small">Sin cola, sin hablar, sin cobrar en la barra.</div></div></div>
     </div>
     <button class="btn pri full" data-act="go" data-to="demo" style="margin-top:12px;font-size:17px">▶ Ver la demo completa</button>
     <p class="muted small" style="text-align:center;margin:10px 0 18px">Cliente, barra y dueño en una sola pantalla, conectados en vivo.</p>
@@ -417,7 +617,7 @@ function viewInicio(){
       <button class="btn" data-act="go" data-to="barra"><span>🍸</span>Barra</button>
       <button class="btn" data-act="go" data-to="dueno"><span>📊</span>Dueño</button>
     </div>
-    <p class="note" style="margin-top:24px">Tip: abre "Cliente" en una pestaña y "Barra" en otra del mismo navegador. Se comunican entre sí.</p>
+    <p class="note" style="margin-top:24px">Tip: con dos equipos puedes probar el escaneo de verdad: abre "Cliente" en uno y "Barra" en otro del mismo navegador… o usa la demo completa, que trae botones para simularlo.</p>
   </div>`;
 }
 
@@ -425,31 +625,29 @@ function viewInicio(){
 function viewCliente(){
   const mineIds = new Set(getMine());
   const myOrders = state.orders.filter(o => mineIds.has(o.id));
-  const activeMine = myOrders.filter(o => o.status !== 'entregado').length;
-  let body = '';
-
+  const activeMine = myOrders.filter(o => isActive(o) || o.status === 'listo').length;
+  let body;
   if (cli.paying) {
     body = `<div class="vbody" style="display:grid;place-items:center;text-align:center;padding-top:80px">
-      <div><div class="spinner"></div><b style="font-size:20px">Procesando tu pago…</b><p class="muted small" style="margin-top:6px">${cli.pay === 'tarjeta' ? 'Tarjeta' : cli.pay === 'plin' ? 'Plin' : 'Yape'} · pago simulado</p></div>
+      <div><div class="spinner"></div><b style="font-size:20px">Reservando tu pago…</b><p class="muted small" style="margin-top:6px">${({yape:'Yape', plin:'Plin', tarjeta:'Tarjeta'})[cli.pay]} · pago simulado</p></div>
     </div>`;
-  } else if (cli.screen === 'carrito') {
-    body = viewCarrito();
-  } else if (cli.screen === 'pedidos') {
-    body = viewMisPedidos(myOrders);
-  } else {
-    body = viewCarta();
-  }
+  } else if (cli.screen === 'carrito') body = viewCarrito();
+  else if (cli.screen === 'pedidos') body = viewMisPedidos(myOrders);
+  else body = viewCarta();
 
   const lines = cartLines();
   const showCartBtn = cli.screen === 'carta' && lines.length && !cli.paying;
-  const alertOrder = cli.alert && state.orders.find(o => o.id === cli.alert);
+  const alertOrder = cli.alert && findOrder(cli.alert);
+  const deliveredOrder = cli.delivered && findOrder(cli.delivered);
+  const anim = cli.alertAnim;
 
   return `<div class="view view-root">
     <div class="vhead">
       ${LOGO}
       <div class="place small" style="margin-left:auto;text-align:right"><b>${LOCAL.nombre}</b><span class="muted">${LOCAL.barra}</span></div>
     </div>
-    ${cli.screen === 'carta' && !cli.paying ? catsBar() : ''}
+    ${cli.notice ? `<div class="banner info">${esc(cli.notice)}</div>` : ''}
+    ${cli.screen === 'carta' && !cli.paying ? barStatusBanner() + catsBar() : ''}
     ${body}
     <div class="sticky-bottom">
       ${showCartBtn ? `<button class="btn pri full" data-act="screen" data-s="carrito" style="justify-content:space-between;padding:16px 22px"><span>Ver pedido · ${countItems(lines)}</span><span>${money(sumItems(lines))}</span></button>` : ''}
@@ -458,14 +656,28 @@ function viewCliente(){
         <button class="${cli.screen === 'pedidos' ? 'on' : ''}" data-act="screen" data-s="pedidos">🧾 Mis pedidos${activeMine ? `<span class="badge">${activeMine}</span>` : ''}</button>
       </div>`}
     </div>
-    ${alertOrder ? `<div class="overlay ${cli.alertAnim ? 'anim' : ''}">
-      <div class="em">🍹</div>
-      <h2>¡Tu pedido #${alertOrder.num} está listo!</h2>
-      <p>Recógelo en <b>${LOCAL.barra}</b> y muestra este código:</p>
-      <div class="code" style="font-size:34px;margin-bottom:24px">${alertOrder.code}</div>
-      <button class="btn ok" data-act="closeAlert" style="min-width:200px">Voy para allá</button>
+    ${alertOrder && alertOrder.status === 'listo' ? `<div class="overlay ${anim ? 'anim' : ''}">
+      <div class="big-n">#${alertOrder.num}</div>
+      <h2>¡Tu pedido está listo!</h2>
+      <p>Ve a <b>${LOCAL.barra}</b> y muestra este QR.<br>Lo escanean y te vas.</p>
+      <div class="qrbox">${qrSvg(qrText(alertOrder))}</div>
+      <p class="small" style="margin:14px 0 4px">¿No lee el QR? Muestra este código: <span class="code" style="font-size:16px">${alertOrder.code}</span></p>
+      <p class="small" style="margin-bottom:14px">Sube el brillo de tu pantalla 🔆</p>
+      <button class="btn ghost" data-act="closeAlert" style="min-width:200px;color:#fff">Cerrar (el QR queda en "Mis pedidos")</button>
+    </div>` : ''}
+    ${deliveredOrder ? `<div class="overlay done ${cli.deliveredAnim ? 'anim' : ''}">
+      <div class="em">🥂</div>
+      <h2>¡Entregado!</h2>
+      <p>Pedido #${deliveredOrder.num} · ${esc(deliveredOrder.lines.map(lineText).join(' · '))}<br>¡Salud! Vuelve a la pista.</p>
+      <button class="btn ok" data-act="closeDelivered" style="min-width:200px">Listo</button>
     </div>` : ''}
   </div>`;
+}
+function barStatusBanner(){
+  if (state.settings.paused) return `<div class="banner bad">⏸️ La barra está en pausa y no recibe pedidos ahora. Intenta en unos minutos.</div>`;
+  const s = saturation(), w = waitForNew();
+  if (s.pct >= SAT_AVISO) return `<div class="banner warn">🔥 La barra está muy llena: tu trago demoraría unos ${w} min.</div>`;
+  return `<div class="banner ok">⚡ Tu trago en unos ${w} min</div>`;
 }
 function catsBar(){
   const cats = ['Todos', ...new Set(state.menu.map(m => m.cat))];
@@ -489,102 +701,140 @@ function viewCarrito(){
   const lines = cartLines();
   if (!lines.length) return `<div class="vbody"><div class="empty"><div class="big">🛒</div>Tu pedido está vacío.<br><br><button class="btn pri" data-act="screen" data-s="carta">Ver la carta</button></div></div>`;
   const pays = [['yape','💜','Yape'],['plin','💙','Plin'],['tarjeta','💳','Tarjeta']];
+  const sub = sumItems(lines), total = sub + COMISION;
+  const paused = state.settings.paused;
   return `<div class="vbody">
-    <button class="btn ghost" data-act="screen" data-s="carta" style="padding:8px 14px;font-size:14px">← Seguir pidiendo</button>
+    <button class="btn ghost sm" data-act="screen" data-s="carta">← Seguir pidiendo</button>
     <div class="section-t">Tu pedido</div>
     ${lines.map(l => `<div class="item">
       <div class="em">${item(l.id).emoji}</div>
       <div class="info"><b>${esc(l.name)}</b><span class="price">${money(l.price * l.qty)}</span></div>
-      <div class="qty"><button data-act="sub" data-id="${l.id}">−</button><span>${l.qty}</span><button class="add" data-act="add" data-id="${l.id}">+</button></div>
+      <div class="qty"><button data-act="sub" data-id="${l.id}" aria-label="Quitar">−</button><span>${l.qty}</span><button class="add" data-act="add" data-id="${l.id}" aria-label="Agregar">+</button></div>
     </div>`).join('')}
-    <label class="field"><span>Tu nombre (para que el bartender te ubique)</span>
+    <label class="field"><span>Tu nombre (sale en tu pedido para que no se confundan)</span>
       <input data-key="name" value="${esc(cli.name)}" placeholder="Ej: Chano" maxlength="20" autocomplete="given-name"></label>
     <div class="section-t">¿Cómo pagas?</div>
     <div class="pays">${pays.map(([k, i, t]) => `<button class="pay ${cli.pay === k ? 'on' : ''}" data-act="pay" data-p="${k}"><i>${i}</i>${t}</button>`).join('')}</div>
-    <div class="row" style="margin:22px 0 14px"><span class="muted">Total</span><span class="total">${money(sumItems(lines))}</span></div>
-    <button class="btn pri full" data-act="checkout" style="font-size:17px;padding:17px">Pagar ${money(sumItems(lines))}</button>
-    <p class="note">Esto es una demo: el pago es simulado y no se cobra nada.</p>
+    <div style="margin:20px 0 14px">
+      <div class="row small muted"><span>Tragos</span><span>${money(sub)}</span></div>
+      <div class="row small muted" style="margin-top:4px"><span>Servicio Al Toque (sin cola)</span><span>${money(COMISION)}</span></div>
+      <div class="row" style="margin-top:10px"><span class="muted">Total</span><span class="total">${money(total)}</span></div>
+    </div>
+    ${paused ? `<div class="banner bad" style="margin:0 0 12px">⏸️ La barra está en pausa. Espera unos minutos.</div>` : ''}
+    <button class="btn pri full" data-act="checkout" ${paused ? 'disabled' : ''} style="font-size:17px;padding:17px">Pagar ${money(total)}</button>
+    <p class="note">Solo se cobra cuando la barra empieza a preparar tu pedido. Si lo cancelas antes, no pagas nada.<br>Demo: el pago es simulado.</p>
   </div>`;
 }
 function viewMisPedidos(myOrders){
   if (!myOrders.length) return `<div class="vbody"><div class="empty"><div class="big">🧾</div>Todavía no has pedido nada.<br><br><button class="btn pri" data-act="screen" data-s="carta">Pedir mi primer trago</button></div></div>`;
-  const sorted = [...myOrders].sort((a, b) => {
-    const rank = s => ({listo:0, preparando:1, nuevo:2, entregado:3}[s]);
-    return rank(a.status) - rank(b.status) || b.t.created - a.t.created;
-  });
+  const rank = s => ({listo:0, preparando:1, nuevo:2, entregado:3, rechazado:4, cancelado:5}[s]);
+  const sorted = [...myOrders].sort((a, b) => rank(a.status) - rank(b.status) || b.t.created - a.t.created);
   return `<div class="vbody">${sorted.map(o => {
-    const step = {nuevo:1, preparando:2, listo:3, entregado:3}[o.status];
-    const cls = o.status === 'listo' ? 'ready' : o.status === 'entregado' ? 'done' : '';
-    let status;
-    if (o.status === 'nuevo') status = `✅ Pagado. En cola · unos <b>${waitMinutes(o)} min</b>`;
-    else if (o.status === 'preparando') status = `🍸 Lo están preparando · unos <b>${waitMinutes(o)} min</b>`;
-    else if (o.status === 'listo') status = `🎉 ¡Listo! Recógelo en ${LOCAL.barra}`;
-    else status = '¡Entregado! Salud 🥂';
+    const step = {nuevo:1, preparando:2, listo:3}[o.status] || 0;
+    const ended = ['entregado','cancelado','rechazado'].includes(o.status);
+    const cls = o.status === 'listo' ? 'ready' : ended ? 'done' : '';
+    let status, extra = '';
+    if (o.status === 'nuevo') {
+      status = `💳 Pago reservado. Esperando a la barra · unos <b>${waitMinutes(o)} min</b>`;
+      extra = `<button class="link" data-act="cancelOrder" data-id="${o.id}">Cancelar pedido (no se te cobra)</button>`;
+    } else if (o.status === 'preparando') status = `🍸 Lo están preparando · unos <b>${waitMinutes(o)} min</b>`;
+    else if (o.status === 'listo') {
+      status = `🎉 ¡Listo! Muestra tu QR en ${LOCAL.barra}`;
+      extra = `<div style="margin-top:14px;text-align:center"><div class="qrbox sm" data-act="showQr" data-id="${o.id}" style="cursor:pointer">${qrSvg(qrText(o))}</div>
+        <button class="btn ok full" data-act="showQr" data-id="${o.id}" style="margin-top:12px">Mostrar QR en grande</button></div>`;
+    }
+    else if (o.status === 'entregado') status = '¡Entregado! Salud 🥂';
+    else if (o.status === 'cancelado') status = 'Cancelado. No se te cobró nada.';
+    else status = 'La barra no pudo prepararlo. No se te cobró nada.';
+    const payTag = isCharged(o) ? `<span class="pill ok">Cobrado</span>` : o.status === 'nuevo' ? `<span class="pill">Reservado</span>` : `<span class="pill">Sin cobro</span>`;
     return `<div class="order ${cls}">
-      <div class="row"><div><div class="muted small">Pedido</div><div class="num">#${o.num}</div></div>
-        <div style="text-align:right"><div class="muted small" style="margin-bottom:4px">Tu código</div><span class="code">${o.code}</span></div></div>
-      ${o.status !== 'entregado' ? `<div class="track"><div class="on"></div><div class="${step >= 2 ? 'on' : ''}"></div><div class="${step >= 3 ? 'on' : ''}"></div></div>
+      <div class="row"><div><div class="muted small">Pedido</div><div class="num">#${o.num}</div></div><div>${payTag}</div></div>
+      ${!ended ? `<div class="track"><div class="on"></div><div class="${step >= 2 ? 'on' : ''}"></div><div class="${step >= 3 ? 'on' : ''}"></div></div>
       <div class="track-l"><span class="on">Pagado</span><span class="${step >= 2 ? 'on' : ''}">Preparando</span><span class="${step >= 3 ? 'on' : ''}">Listo</span></div>` : ''}
       <div class="status">${status}</div>
-      <div class="lines">${o.lines.map(lineText).map(esc).join(' · ')} — ${money(o.total)}</div>
+      <div class="lines">${o.lines.map(lineText).map(esc).join(' · ')} — ${money(o.total + COMISION)}</div>
+      ${extra}
     </div>`;
   }).join('')}
-  <p class="note">Cuando tu pedido esté listo, tu celular va a sonar y vibrar. Mientras tanto, sigue bailando 💃</p></div>`;
+  <p class="note">Cuando tu pedido esté listo, tu celular va a sonar, vibrar y mostrarte tu QR. Mientras tanto, sigue bailando 💃</p></div>`;
 }
 
 /* ---------- Barra ---------- */
+function satBox(withControls){
+  const s = saturation(), paused = state.settings.paused;
+  const pct = Math.min(100, s.pct);
+  return `<div class="sat">
+    <div class="row"><b>${paused ? '⏸️ Pedidos en pausa' : 'Saturación: ' + satLabel(s.pct)}</b><span class="muted small">${s.active} en cola · ${s.pct}%</span></div>
+    <div class="meter"><div style="width:${pct}%;background:${paused ? 'var(--mu)' : satColor(s.pct)}"></div></div>
+    ${withControls ? `<div class="row" style="margin-top:8px">
+      <span class="muted small">${paused ? 'Los clientes no pueden pedir.' : s.pct >= SAT_AVISO ? 'Los clientes ven el tiempo de espera antes de pedir.' : 'Todo fluye.'}</span>
+      <button class="btn sm ${paused ? 'ok' : 'ghost'}" data-act="pause">${paused ? '▶ Reanudar' : '⏸ Pausar'}</button>
+    </div>` : ''}
+  </div>`;
+}
 function viewBarra(){
   const by = s => state.orders.filter(o => o.status === s).sort((a, b) => a.t.created - b.t.created);
   const nuevos = by('nuevo'), prep = by('preparando'), listos = by('listo');
   const ticket = (o, kind) => `<div class="tk ${kind}">
     <div class="top"><b>#${o.num} · ${esc(o.name)}</b><span class="muted small">${ago(o.t.created)}</span></div>
     <ul>${o.lines.map(l => `<li><i>${l.qty}×</i>${esc(l.name)}</li>`).join('')}</ul>
-    ${kind === '' ? `<button class="btn full" style="background:var(--ac2);color:#2a1d00" data-act="start" data-id="${o.id}">Empezar a preparar</button>` : ''}
+    ${kind === '' ? `<div class="two"><button class="btn yel" data-act="start" data-id="${o.id}">Empezar (se cobra)</button><button class="btn ghost sm" data-act="reject" data-id="${o.id}" title="Por ejemplo, si se acabó algo">No se puede</button></div>` : ''}
     ${kind === 'prep' ? `<button class="btn ok full" data-act="ready" data-id="${o.id}">¡Listo! Avisar al cliente</button>` : ''}
-    ${kind === 'lst' ? `<div class="row" style="margin-bottom:10px"><span class="muted small">Pídele que te muestre:</span><span class="code">${o.code}</span></div>
-      <button class="btn full" data-act="deliver" data-id="${o.id}">Entregado ✓</button>` : ''}
+    ${kind === 'lst' ? `<div class="row"><span class="muted small">Esperando que ${esc(o.name)} muestre su QR</span><button class="link" data-act="deliverManual" data-id="${o.id}">Entregar sin QR</button></div>` : ''}
   </div>`;
-  const col = (title, list, kind, emptyMsg) => `<div>
+  const col = (title, list, kind, emptyMsg, top = '') => `<div>
     <div class="col-h">${title}<span class="cnt">${list.length}</span></div>
+    ${top}
     ${list.length ? list.map(o => ticket(o, kind)).join('') : `<div class="blank">${emptyMsg}</div>`}
   </div>`;
   return `<div class="view view-root">
     <div class="vhead">
       <div class="place"><b style="font-size:20px">🍸 ${LOCAL.barra}</b><span class="muted small">${LOCAL.nombre} · pantalla del bartender</span></div>
-      <button class="btn ghost" data-act="fake" style="margin-left:auto;padding:9px 14px;font-size:13px">+ Pedido de prueba</button>
+      <button class="btn ghost sm" data-act="fake" style="margin-left:auto">+ Pedido de prueba</button>
     </div>
+    ${satBox(true)}
     <div class="vbody bar-cols">
       ${col('🔔 Nuevos', nuevos, '', 'No hay pedidos nuevos')}
       ${col('🍸 Preparando', prep, 'prep', 'Nada en preparación')}
-      ${col('✅ Listos para recoger', listos, 'lst', 'Nadie esperando')}
+      ${col('✅ Para recoger', listos, 'lst', 'Nadie esperando',
+            `<button class="btn ok full scanbtn" data-act="openScan">📷 Escanear QR del cliente</button>`)}
     </div>
   </div>`;
 }
 
 /* ---------- Dueño ---------- */
 function viewDueno(){
-  const paid = state.orders;
-  const ventas = paid.reduce((a, o) => a + o.total, 0);
-  const ticketProm = paid.length ? ventas / paid.length : 0;
-  const withReady = paid.filter(o => o.t.ready);
+  const charged = state.orders.filter(isCharged);
+  const ventas = charged.reduce((a, o) => a + o.total, 0);
+  const ticketProm = charged.length ? ventas / charged.length : 0;
+  const withReady = charged.filter(o => o.t.ready);
   const espera = withReady.length ? withReady.reduce((a, o) => a + (o.t.ready - o.t.created), 0) / withReady.length / 60000 : null;
-  const tragos = paid.reduce((a, o) => a + countItems(o.lines), 0);
+  const tragos = charged.reduce((a, o) => a + countItems(o.lines), 0);
+  const anulados = state.orders.filter(o => o.status === 'cancelado' || o.status === 'rechazado').length;
 
   const count = {};
-  paid.forEach(o => o.lines.forEach(l => count[l.name] = (count[l.name] || 0) + l.qty));
+  charged.forEach(o => o.lines.forEach(l => count[l.name] = (count[l.name] || 0) + l.qty));
   const top = Object.entries(count).sort((a, b) => b[1] - a[1]).slice(0, 5);
   const max = top.length ? top[0][1] : 1;
 
   return `<div class="view view-root">
     <div class="vhead"><div class="place"><b style="font-size:20px">📊 Panel del dueño</b><span class="muted small">${LOCAL.nombre} · esta noche</span></div></div>
+    ${satBox(true)}
     <div class="vbody">
       <div class="kpis">
         <div class="kpi hl"><div class="muted small">Ventas por la app</div><div class="v">${money(ventas)}</div></div>
-        <div class="kpi"><div class="muted small">Pedidos</div><div class="v">${paid.length}</div></div>
+        <div class="kpi"><div class="muted small">Pedidos cobrados</div><div class="v">${charged.length}</div></div>
         <div class="kpi"><div class="muted small">Tragos vendidos</div><div class="v">${tragos}</div></div>
         <div class="kpi"><div class="muted small">Ticket promedio</div><div class="v">${money(ticketProm)}</div></div>
         <div class="kpi"><div class="muted small">Espera promedio</div><div class="v">${espera === null ? '—' : espera < 1 ? '< 1 min' : espera.toFixed(1) + ' min'}</div></div>
-        <div class="kpi"><div class="muted small">Comisión Al Toque</div><div class="v">${money(paid.length * COMISION)}</div><div class="muted small">S/ ${COMISION} por pedido</div></div>
+        <div class="kpi"><div class="muted small">Cancelados / rechazados</div><div class="v">${anulados}</div><div class="muted small">sin cobro</div></div>
+      </div>
+      <p class="note" style="text-align:left">A ti no te cuesta nada: el cliente paga ${money(COMISION)} de servicio por pedido.</p>
+
+      <div class="section-t">Capacidad de la barra</div>
+      <div class="card row">
+        <div><b>Pedidos a la vez</b><div class="muted small">Con más de esto, la barra se marca llena.</div></div>
+        <div class="pp"><button data-act="cap" data-delta="-1" aria-label="Menos">−</button><span>${state.settings.capacity}</span><button data-act="cap" data-delta="1" aria-label="Más">+</button></div>
       </div>
 
       <div class="section-t">Lo más pedido</div>
@@ -599,7 +849,9 @@ function viewDueno(){
         <button class="sw ${m.available ? '' : 'off'}" data-act="avail" data-id="${m.id}">${m.available ? 'Disponible' : 'Agotado'}</button>
       </div>`).join('')}
 
-      <button class="btn ${resetArmed ? 'pri' : 'ghost'} full" data-act="reset" style="margin-top:22px">${resetArmed ? '¿Seguro? Toca otra vez para borrar todo' : '↺ Reiniciar demo'}</button>
+      <div class="section-t">Para la demo</div>
+      <button class="btn full" data-act="fake5">🔥 Simular hora punta (+5 pedidos)</button>
+      <button class="btn ${resetArmed ? 'pri' : 'ghost'} full" data-act="reset" style="margin-top:10px">${resetArmed ? '¿Seguro? Toca otra vez para borrar todo' : '↺ Reiniciar demo'}</button>
     </div>
   </div>`;
 }
@@ -613,20 +865,18 @@ function viewDemo(){
       <span class="tag">Demo en vivo</span>
       <div class="tabs">${tabs.map(([k, t]) => `<button class="chip ${demoTab === k ? 'on' : ''}" data-act="tab" data-tab="${k}">${t}</button>`).join('')}</div>
     </div>
-    <div class="demo-hint">Pide como cliente → prepáralo en la barra → mira cómo le llega el aviso al cliente.</div>
+    <div class="demo-hint">Pide como cliente → en la barra: empezar y "¡Listo!" → al cliente le sale su QR → la barra lo escanea y se entrega.</div>
     <div class="panels">
       <div class="panel ${demoTab === 'cliente' ? 'on' : ''}"><div class="panel-title">📱 Celular del cliente</div><div class="frame" data-scroll="cliente">${viewCliente()}</div></div>
       <div class="panel wide ${demoTab === 'barra' ? 'on' : ''}"><div class="panel-title">🍸 Pantalla de la barra</div><div class="frame" data-scroll="barra">${viewBarra()}</div></div>
       <div class="panel ${demoTab === 'dueno' ? 'on' : ''}"><div class="panel-title">📊 Panel del dueño</div><div class="frame" data-scroll="dueno">${viewDueno()}</div></div>
-    </div>
-`;
+    </div>`;
 }
 
 /* ---------------- Render ---------------- */
 const app = document.getElementById('app');
 function render(){
   const r = route();
-  // Guardar foco y scroll para que nada "salte" al actualizar
   const a = document.activeElement;
   const key = a && a.dataset ? a.dataset.key : null;
   const sel = key ? [a.selectionStart, a.selectionEnd] : null;
@@ -640,7 +890,7 @@ function render(){
   else if (r === 'demo') html = viewDemo();
   else html = viewInicio();
   app.innerHTML = html;
-  cli.alertAnim = false;
+  cli.alertAnim = false; cli.deliveredAnim = false;
 
   document.querySelectorAll('[data-scroll]').forEach(n => { if (scrolls[n.dataset.scroll]) n.scrollTop = scrolls[n.dataset.scroll]; });
   if (key) {
@@ -649,7 +899,7 @@ function render(){
   }
 }
 // Actualiza los "hace X min" y los tiempos de espera
-setInterval(() => { if (!document.activeElement || !document.activeElement.dataset || !document.activeElement.dataset.key) render(); }, 20000);
+setInterval(() => { const a = document.activeElement; if (!a || !a.dataset || !a.dataset.key) render(); }, 20000);
 render();
 </script>
 </body>
