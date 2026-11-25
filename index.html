@@ -284,6 +284,40 @@
   .tab .dot.show { display: block; }
 
   :focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+  /* Buscar padrino */
+  .field { display: block; margin-top: 16px; }
+  .field span { display: block; font-weight: 600; color: var(--navy); margin-bottom: 6px; font-size: .95rem; }
+  .field input {
+    width: 100%; padding: 14px 16px; border-radius: 14px; border: 2px solid var(--line); font: inherit;
+    font-size: 1rem; background: var(--white); color: var(--text);
+  }
+  .field input:focus { outline: none; border-color: var(--blue); }
+  .field small { display: block; color: var(--muted); font-size: .82rem; margin-top: 6px; }
+  .field.error input { border-color: var(--orange); }
+  .field.error small { color: var(--orange); }
+  .loader { text-align: center; padding: 36px 18px; }
+  .spinner {
+    width: 64px; height: 64px; margin: 0 auto 18px; border-radius: 50%;
+    border: 6px solid var(--line); border-top-color: var(--orange); animation: spin .9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loader h2 { font-size: 1.35rem; color: var(--navy); margin-bottom: 6px; }
+  .loader p { color: var(--muted); min-height: 1.5em; }
+  .ok-icon { width: 72px; height: 72px; border-radius: 50%; background: #E7F4EC; color: #1F6B3A; display: grid; place-items: center; margin: 0 auto 14px; }
+  .ok-icon svg { width: 36px; height: 36px; }
+  .demo-tag { display: inline-block; font-size: .72rem; font-weight: 700; color: var(--blue); background: rgba(42,111,151,.12); padding: 3px 8px; border-radius: 99px; margin-bottom: 8px; }
+  .bubble.result { background: var(--white); border: 2px solid var(--orange); max-width: 100%; }
+  .bubble.result b { display: block; font-family: "Space Grotesk", sans-serif; color: var(--navy); font-size: 1.05rem; margin-bottom: 4px; }
+  .answers { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+  .answers button {
+    padding: 10px 14px; border-radius: 99px; background: var(--white); border: 1.5px solid var(--orange);
+    color: var(--orange); font-size: .9rem; font-weight: 600; animation: enter .25s ease;
+  }
+  .answers button:active { background: var(--orange); color: var(--white); }
+  .chat-actions { display: grid; gap: 8px; margin-top: 4px; }
+  .chat-actions .btn { padding: 13px 16px; font-size: .95rem; }
+  #free-msg[hidden], #chat-actions[hidden] { display: none; }
 </style>
 </head>
 <body>
@@ -323,7 +357,7 @@
     </div>
 
     <div class="btn-row">
-      <button class="btn btn-primary" data-go="encuesta">Empezar
+      <button class="btn btn-primary" data-go="buscar">Quiero un padrino
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
     </div>
@@ -336,46 +370,42 @@
     <p class="note">Proyecto de Aprendizaje Estratégico y Liderazgo · UPC Monterrico</p>
   </section>
 
-  <!-- 2. ENCUESTA -->
-  <section class="screen" id="encuesta" aria-label="Encuesta">
+  <!-- 2. BUSCAR PADRINO -->
+  <section class="screen" id="buscar" aria-label="Buscar padrino">
     <div class="topbar">
-      <div class="brand"><div class="logo">PB</div>Encuesta rápida</div>
-      <span class="tag">1 minuto</span>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-label"><span id="q-count">Pregunta 1 de 5</span><span id="q-pct">0%</span></div>
-      <div class="bar"><div id="q-bar"></div></div>
-    </div>
-    <h2 class="question" id="q-text"></h2>
-    <p class="lead" id="q-help"></p>
-    <div class="options" id="q-options" role="radiogroup"></div>
-    <div class="survey-nav">
-      <button class="btn btn-ghost" id="q-back">Atrás</button>
-      <button class="btn btn-primary" id="q-next" disabled>Siguiente</button>
-    </div>
-  </section>
-
-  <!-- 3. RESULTADO -->
-  <section class="screen" id="resultado" aria-label="Resultado">
-    <div class="topbar">
-      <div class="brand"><div class="logo">PB</div>Tu resultado</div>
-    </div>
-    <div class="result-hero">
-      <span class="badge" id="r-badge">Tu resultado</span>
-      <h2>¡Te podemos ayudar!</h2>
-      <p id="r-text"></p>
+      <div class="brand"><div class="logo">PB</div>Busca tu padrino</div>
     </div>
 
-    <h2 class="section-title">Lo que vimos en tus respuestas</h2>
-    <div class="card"><ul class="reasons" id="r-reasons"></ul></div>
+    <div id="b-form">
+      <div class="hero" style="padding:24px 22px">
+        <h1 style="font-size:1.7rem">Te conectamos con un padrino</h1>
+        <p>Un trabajador de la UPC que tuvo Beca 18 te guía paso a paso.</p>
+      </div>
+      <label class="field" id="b-field">
+        <span>Tu correo</span>
+        <input type="email" id="b-email" inputmode="email" autocomplete="email" placeholder="tucorreo@upc.edu.pe">
+        <small id="b-hint">Ahí te avisamos cuando tu padrino esté listo.</small>
+      </label>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="b-buscar">Buscar mi padrino</button>
+      </div>
+    </div>
 
-    <h2 class="section-title">Tu padrino</h2>
-    <div class="card" id="r-padrino"></div>
+    <div id="b-loading" class="card loader" hidden>
+      <div class="spinner"></div>
+      <h2>Buscando un padrino…</h2>
+      <p id="b-loading-text">Revisando padrinos disponibles</p>
+    </div>
 
-    <div class="btn-row">
-      <button class="btn btn-primary" data-go="pasos">Ver mis pasos</button>
-      <button class="btn btn-secondary" data-go="padrino">Hablar con mi padrino</button>
-      <button class="btn btn-ghost" data-go="planb">¿Y si no califico?</button>
+    <div id="b-done" class="card loader" hidden>
+      <div class="ok-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+      <h2>¡Solicitud enviada!</h2>
+      <p id="b-done-text">Te avisaremos a tu correo cuando encontremos a tu padrino.</p>
+      <div class="btn-row">
+        <span class="demo-tag">Solo para la demo</span>
+        <button class="btn btn-secondary" data-go="padrino">Hablar ahora con mi padrino</button>
+        <button class="btn btn-ghost" data-go="inicio">Volver al inicio</button>
+      </div>
     </div>
   </section>
 
@@ -456,31 +486,35 @@
     <div id="chat-empty" class="card empty">
       <div class="big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
       <h2>Aún no tienes padrino</h2>
-      <p>Responde la encuesta de 5 preguntas y te asignamos uno.</p>
-      <button class="btn btn-primary" data-go="encuesta">Hacer la encuesta</button>
+      <p>Pide uno y te avisamos a tu correo cuando esté listo.</p>
+      <button class="btn btn-primary" data-go="buscar">Quiero un padrino</button>
     </div>
 
     <div id="chat-box" class="card" hidden>
       <div class="chat-head">
         <div class="avatar sm" id="c-avatar"></div>
-        <div><h3 id="c-name"></h3><div class="status">En línea en horario UPC</div></div>
+        <div><h3 id="c-name"></h3><div class="status" id="c-area"></div></div>
       </div>
       <div class="chat" id="chat" aria-live="polite"></div>
-      <div class="quick" id="quick">
-        <button>¿Qué documentos necesito?</button>
-        <button>¿Cuándo es el examen?</button>
-        <button>No sé si califico</button>
+      <div class="answers" id="answers" style="margin-top:12px"></div>
+
+      <div class="chat-actions" id="chat-actions" hidden style="margin-top:14px">
+        <button class="btn btn-primary" data-go="pasos">Ver mis pasos</button>
+        <button class="btn btn-ghost" data-go="planb">Ver el Plan B</button>
       </div>
-      <label for="msg" class="lead" style="display:block;margin-bottom:6px;font-size:.9rem">Escribe tu mensaje</label>
-      <textarea id="msg" placeholder="Hola, quisiera ayuda para postular a Beca 18."></textarea>
-      <div class="btn-row" style="margin-top:12px">
-        <button class="btn btn-primary" id="send">Enviar mensaje
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-        </button>
-      </div>
-      <div class="toast" id="toast" role="status">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-        Tu padrino te responderá pronto
+
+      <div id="free-msg" hidden>
+        <label for="msg" class="lead" style="display:block;margin:16px 0 6px;font-size:.9rem">¿Tienes otra duda? Escríbele</label>
+        <textarea id="msg" placeholder="Hola, quisiera ayuda para postular a Beca 18."></textarea>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn btn-secondary" id="send">Enviar mensaje
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          </button>
+        </div>
+        <div class="toast" id="toast" role="status">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          Tu padrino te responderá pronto
+        </div>
       </div>
     </div>
   </section>
@@ -513,48 +547,30 @@
 (function () {
   "use strict";
 
-  /* ---------- Datos ---------- */
+  /* ---------- Datos de ejemplo ---------- */
   var PADRINOS = [
-    { nombre: "Rosa Huamán Quispe", iniciales: "RH", area: "Bienestar Estudiantil", chip: "Exbecaria Beca 18", color: "#2A6F97",
-      frase: "Yo también pensé en dejar la universidad por plata. Beca 18 me cambió la vida y quiero que a ti también." },
-    { nombre: "Jorge Mendoza Rojas", iniciales: "JM", area: "Tutoría", chip: "Exbecario Beca 18", color: "#E8632A",
-      frase: "Te ayudo a ordenar tus documentos y a prepararte para el examen, paso a paso." },
-    { nombre: "Lucía Paredes Flores", iniciales: "LP", area: "Biblioteca", chip: "Exbecaria Beca 18", color: "#14213D",
-      frase: "Postular parece difícil, pero juntos lo hacemos fácil. Búscame cuando quieras." }
+    { nombre: "Rosa Huamán Quispe", iniciales: "RH", area: "Bienestar Estudiantil", chip: "Exbecaria Beca 18", color: "#2A6F97" },
+    { nombre: "Jorge Mendoza Rojas", iniciales: "JM", area: "Tutoría", chip: "Exbecario Beca 18", color: "#E8632A" },
+    { nombre: "Lucía Paredes Flores", iniciales: "LP", area: "Biblioteca", chip: "Exbecaria Beca 18", color: "#14213D" }
   ];
 
+  // El padrino hace estas preguntas en el chat
   var PREGUNTAS = [
-    { id: "paga", texto: "¿Quién paga tus estudios?", ayuda: "Elige la opción que más se parece a tu caso.",
-      opciones: [
-        { t: "Mis papás", p: 1 },
-        { t: "Yo mismo, con mi trabajo", p: 3 },
-        { t: "Un familiar u otra persona", p: 2 },
-        { t: "Con un préstamo", p: 3 }
-      ] },
-    { id: "trabaja", texto: "¿Trabajas además de estudiar?", ayuda: "Cualquier trabajo cuenta, también los de fin de semana.",
-      opciones: [
-        { t: "Sí, a tiempo completo", p: 3 },
-        { t: "Sí, a medio tiempo", p: 2 },
-        { t: "No trabajo", p: 0 }
-      ] },
-    { id: "presto", texto: "¿Alguna vez tuviste que pedir prestado para pagar materiales?", ayuda: "Libros, copias, útiles o pasajes.",
-      opciones: [
-        { t: "Sí, varias veces", p: 3 },
-        { t: "Sí, una vez", p: 2 },
-        { t: "Nunca", p: 0 }
-      ] },
-    { id: "laptop", texto: "¿Tienes una laptop que funcione bien?", ayuda: "Una que puedas usar para tus clases y tareas.",
-      opciones: [
-        { t: "Sí, funciona bien", p: 0 },
-        { t: "Tengo, pero falla mucho", p: 2 },
-        { t: "No tengo laptop", p: 3 }
-      ] },
-    { id: "conoce", texto: "¿Conoces Beca 18?", ayuda: "Sé sincero, para eso estamos.",
-      opciones: [
-        { t: "Sí, y sé cómo postular", p: 0 },
-        { t: "La he escuchado, pero no sé cómo postular", p: 1 },
-        { t: "No la conozco", p: 2 }
-      ] }
+    { texto: "¿Quién paga tus estudios?",
+      opciones: ["Mis papás", "Yo mismo, con mi trabajo", "Un familiar u otra persona", "Con un préstamo"],
+      respuesta: ["Entiendo.", "Qué esfuerzo, eso habla muy bien de ti.", "Entiendo, gracias por contarme.", "Ok, eso es importante saberlo."] },
+    { texto: "¿Trabajas además de estudiar?",
+      opciones: ["Sí, a tiempo completo", "Sí, a medio tiempo", "No trabajo"],
+      respuesta: ["Uf, no es fácil hacer las dos cosas.", "Ok, anotado.", "Perfecto."] },
+    { texto: "¿Alguna vez tuviste que pedir prestado para pagar materiales?",
+      opciones: ["Sí, varias veces", "Sí, una vez", "Nunca"],
+      respuesta: ["Gracias por la confianza.", "Ok, anotado.", "Bien."] },
+    { texto: "¿Tienes una laptop que funcione bien?",
+      opciones: ["Sí, funciona bien", "Tengo, pero falla mucho", "No tengo laptop"],
+      respuesta: ["Genial.", "Eso complica las tareas, lo sé.", "Ok, eso es clave para estudiar."] },
+    { texto: "Última: ¿conoces Beca 18?",
+      opciones: ["Sí, y sé cómo postular", "La he escuchado", "No la conozco"],
+      respuesta: ["¡Bien!", "Tranqui, te la explico.", "Tranqui, para eso estoy."] }
   ];
 
   var PASOS = [
@@ -567,28 +583,26 @@
 
   /* ---------- Estado (se guarda mientras la página está abierta) ---------- */
   var state = {
-    respuestas: new Array(PREGUNTAS.length).fill(null),
-    actual: 0,
+    correo: "",
+    busqueda: "form",       // form | loading | done
     padrino: null,
-    pasos: new Array(PASOS.length).fill(false),
-    mensajes: 0
+    chatIniciado: false,
+    pregunta: 0,
+    respuestas: [],
+    pasos: new Array(PASOS.length).fill(false)
   };
 
   var $ = function (id) { return document.getElementById(id); };
+  var esperar = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
 
   /* ---------- Navegación ---------- */
-  var TAB_DE = { inicio: "inicio", encuesta: "inicio", resultado: "padrino", pasos: "pasos", padrino: "padrino", planb: "planb" };
+  var TAB_DE = { inicio: "inicio", buscar: "padrino", pasos: "pasos", padrino: "padrino", planb: "planb" };
 
   function ir(destino) {
-    if (!document.getElementById(destino)) return;
-    if (destino === "encuesta") {
-      // Si ya terminó la encuesta, vuelve a empezar desde la primera pregunta
-      state.actual = state.padrino === null ? Math.max(0, state.respuestas.indexOf(null)) : 0;
-    }
-    if (destino === "encuesta") pintarPregunta();
+    if (!$(destino)) return;
+    if (destino === "buscar") pintarBusqueda();
     if (destino === "padrino") pintarChat();
     if (destino === "pasos") pintarPasos();
-
     document.querySelectorAll(".screen").forEach(function (s) { s.classList.toggle("active", s.id === destino); });
     document.querySelectorAll(".tab").forEach(function (t) { t.classList.toggle("active", t.dataset.tab === TAB_DE[destino]); });
     window.scrollTo(0, 0);
@@ -599,107 +613,182 @@
     if (b) { e.preventDefault(); ir(b.dataset.go); }
   });
 
-  /* ---------- Encuesta ---------- */
-  function pintarPregunta() {
-    var i = state.actual, q = PREGUNTAS[i];
-    var pct = Math.round((i / PREGUNTAS.length) * 100);
-    $("q-count").textContent = "Pregunta " + (i + 1) + " de " + PREGUNTAS.length;
-    $("q-pct").textContent = pct + "%";
-    $("q-bar").style.width = pct + "%";
-    $("q-text").textContent = q.texto;
-    $("q-help").textContent = q.ayuda;
+  /* ---------- Buscar padrino ---------- */
+  function pintarBusqueda() {
+    $("b-form").hidden = state.busqueda !== "form";
+    $("b-loading").hidden = state.busqueda !== "loading";
+    $("b-done").hidden = state.busqueda !== "done";
+  }
 
-    var cont = $("q-options");
-    cont.innerHTML = "";
-    q.opciones.forEach(function (op, k) {
-      var b = document.createElement("button");
-      b.className = "option" + (state.respuestas[i] === k ? " selected" : "");
-      b.setAttribute("role", "radio");
-      b.setAttribute("aria-checked", state.respuestas[i] === k ? "true" : "false");
-      b.textContent = op.t;
-      b.addEventListener("click", function () {
-        state.respuestas[i] = k;
-        cont.querySelectorAll(".option").forEach(function (o, j) {
-          o.classList.toggle("selected", j === k);
-          o.setAttribute("aria-checked", j === k ? "true" : "false");
-        });
-        $("q-next").disabled = false;
-        $("q-bar").style.width = Math.round(((i + 1) / PREGUNTAS.length) * 100) + "%";
-        $("q-pct").textContent = Math.round(((i + 1) / PREGUNTAS.length) * 100) + "%";
+  $("b-buscar").addEventListener("click", function () {
+    var correo = $("b-email").value.trim();
+    var valido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+    $("b-field").classList.toggle("error", !valido);
+    if (!valido) {
+      $("b-hint").textContent = "Escribe un correo válido para poder avisarte.";
+      $("b-email").focus();
+      return;
+    }
+    state.correo = correo;
+    state.busqueda = "loading";
+    pintarBusqueda();
+
+    var textos = ["Revisando padrinos disponibles", "Buscando un exbecario de la UPC", "Ya casi…"];
+    textos.forEach(function (t, i) { setTimeout(function () { $("b-loading-text").textContent = t; }, i * 1100); });
+
+    setTimeout(function () {
+      state.padrino = PADRINOS[Math.floor(Math.random() * PADRINOS.length)];
+      state.busqueda = "done";
+      $("b-done-text").textContent = "Te avisaremos a " + correo + " cuando tu padrino esté listo para hablar contigo.";
+      $("padrino-dot").classList.add("show");
+      pintarBusqueda();
+    }, 3400);
+  });
+
+  $("b-email").addEventListener("keydown", function (e) { if (e.key === "Enter") $("b-buscar").click(); });
+
+  /* ---------- Chat con el padrino ---------- */
+  function hora() {
+    var d = new Date();
+    return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+  }
+
+  function burbuja(texto, quien, clase) {
+    var div = document.createElement("div");
+    div.className = "bubble " + quien + (clase ? " " + clase : "");
+    div.textContent = texto;
+    var s = document.createElement("small"); s.textContent = hora();
+    div.appendChild(s);
+    $("chat").appendChild(div);
+    bajar(div);
+    return div;
+  }
+
+  // El padrino "escribe" (puntitos) y luego manda el mensaje
+  function padrinoDice(texto, clase) {
+    var esc = document.createElement("div");
+    esc.className = "bubble them";
+    esc.innerHTML = '<span class="typing"><i></i><i></i><i></i></span>';
+    $("chat").appendChild(esc);
+    bajar(esc);
+    return esperar(700 + Math.min(texto.length * 12, 900)).then(function () {
+      esc.remove();
+      return burbuja(texto, "them", clase);
+    });
+  }
+
+  // Mantiene a la vista el último mensaje del chat
+  function bajar(el) {
+    if (el.getBoundingClientRect().bottom > window.innerHeight - 90) {
+      el.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }
+
+  function pintarChat() {
+    var tiene = state.padrino !== null;
+    $("chat-empty").hidden = tiene;
+    $("chat-box").hidden = !tiene;
+    $("padrino-dot").classList.remove("show");
+    if (!tiene) return;
+    var p = state.padrino;
+    $("c-avatar").textContent = p.iniciales;
+    $("c-avatar").style.background = p.color;
+    $("c-name").textContent = p.nombre;
+    $("c-area").textContent = p.area + " · " + p.chip;
+    if (!state.chatIniciado) iniciarChat();
+  }
+
+  function iniciarChat() {
+    state.chatIniciado = true;
+    var nombre = state.padrino.nombre.split(" ")[0];
+    padrinoDice("¡Hola! Soy " + nombre + ", trabajo en " + state.padrino.area + " de la UPC y estudié con Beca 18.")
+      .then(function () { return padrinoDice("Te haré 5 preguntas rápidas para ver cómo te puedo ayudar."); })
+      .then(preguntar);
+  }
+
+  function preguntar() {
+    var q = PREGUNTAS[state.pregunta];
+    padrinoDice(q.texto).then(function () {
+      var cont = $("answers");
+      cont.innerHTML = "";
+      q.opciones.forEach(function (op, k) {
+        var b = document.createElement("button");
+        b.textContent = op;
+        b.addEventListener("click", function () { responder(k); });
+        cont.appendChild(b);
       });
-      cont.appendChild(b);
+      bajar(cont);
     });
-
-    $("q-next").disabled = state.respuestas[i] === null;
-    $("q-next").textContent = i === PREGUNTAS.length - 1 ? "Ver mi resultado" : "Siguiente";
-    $("q-back").textContent = i === 0 ? "Salir" : "Atrás";
-    if (state.respuestas[i] !== null) {
-      $("q-bar").style.width = Math.round(((i + 1) / PREGUNTAS.length) * 100) + "%";
-      $("q-pct").textContent = Math.round(((i + 1) / PREGUNTAS.length) * 100) + "%";
-    }
   }
 
-  $("q-next").addEventListener("click", function () {
-    if (state.respuestas[state.actual] === null) return;
-    if (state.actual < PREGUNTAS.length - 1) { state.actual++; pintarPregunta(); window.scrollTo(0, 0); }
-    else { calcularResultado(); ir("resultado"); }
-  });
-  $("q-back").addEventListener("click", function () {
-    if (state.actual === 0) { ir("inicio"); return; }
-    state.actual--; pintarPregunta();
-  });
+  function responder(k) {
+    var q = PREGUNTAS[state.pregunta];
+    $("answers").innerHTML = "";
+    burbuja(q.opciones[k], "me");
+    state.respuestas.push(k);
+    state.pregunta++;
+    padrinoDice(q.respuesta[k]).then(function () {
+      if (state.pregunta < PREGUNTAS.length) preguntar();
+      else darOrientacion();
+    });
+  }
 
-  /* ---------- Resultado ---------- */
-  function calcularResultado() {
-    var r = state.respuestas, puntos = 0;
-    PREGUNTAS.forEach(function (q, i) { puntos += q.opciones[r[i]].p; });
+  function darOrientacion() {
+    var r = state.respuestas;
+    var nombre = state.padrino.nombre.split(" ")[0];
 
-    var razones = [];
-    if (r[0] === 1 || r[0] === 3) razones.push("Pagas tus estudios con mucho esfuerzo. Beca 18 cubre matrícula y pensión.");
-    else if (r[0] === 2) razones.push("Otra persona te apoya con los pagos. Con Beca 18 le quitas ese peso.");
-    if (r[1] !== 2) razones.push("Trabajas y estudias. La manutención de Beca 18 te da más tiempo para estudiar.");
-    if (r[2] !== 2) razones.push("Pediste prestado para materiales. Beca 18 también los cubre.");
-    if (r[3] !== 0) razones.push("Necesitas una laptop. Beca 18 te entrega una.");
-    if (r[4] !== 0) razones.push("Tu padrino te explica Beca 18 y cómo postular, paso a paso.");
-    if (razones.length === 0) razones.push("Ya conoces Beca 18. Tu padrino te ayuda a postular sin errores.");
+    // Casos donde el alumno no tiene problemas de dinero
+    var sinNecesidad = r[0] === 0 && r[1] === 2 && r[2] === 2 && r[3] === 0;
 
-    var badge, texto;
-    if (puntos >= 9) {
-      badge = "Prioridad alta";
-      texto = "Beca 18 puede ser justo lo que necesitas. Te asignamos un padrino para empezar ya.";
-    } else if (puntos >= 4) {
-      badge = "Buen candidato";
-      texto = "Beca 18 te puede servir mucho. Tu padrino te dirá si calificas y cómo postular.";
-    } else {
-      badge = "Te orientamos";
-      texto = "Quizás no necesites Beca 18 ahora, pero tu padrino te orienta. Y si no calificas, está el Plan B.";
+    if (sinNecesidad) {
+      padrinoDice("Te digo la verdad: por lo que me cuentas, hoy no parece que necesites Beca 18. Tus papás cubren tus estudios, no trabajas, nunca pediste prestado y tienes una buena laptop.", "result")
+        .then(function (b) { marcarResultado(b, "Mi recomendación: por ahora no la necesitas"); })
+        .then(function () { return padrinoDice("Beca 18 es para quienes más lo necesitan. Si tu situación cambia, escríbeme y lo vemos juntos."); })
+        .then(function () { terminar(false); });
+      return;
     }
 
-    // Asignación del padrino según la necesidad principal
-    var idx;
-    if (r[1] !== 2 || r[0] === 1) idx = 0;      // trabaja o se paga solo -> Bienestar Estudiantil
-    else if (r[4] !== 0) idx = 1;               // no conoce Beca 18 -> Tutoría
-    else idx = 2;                               // resto -> Biblioteca
-    state.padrino = PADRINOS[idx];
+    var ayuda = [];
+    if (r[0] !== 0) ayuda.push("te paga la pensión");
+    if (r[1] !== 2) ayuda.push("te da dinero mensual para que no tengas que trabajar tanto");
+    if (r[2] !== 2) ayuda.push("cubre tus materiales");
+    if (r[3] !== 0) ayuda.push("te da una laptop");
+    var detalle = ayuda.length ? " Beca 18 " + unir(ayuda) + "." : "";
 
-    $("r-badge").textContent = badge;
-    $("r-text").textContent = texto;
-    $("r-reasons").innerHTML = "";
-    razones.forEach(function (t) {
-      var li = document.createElement("li"); li.textContent = t; $("r-reasons").appendChild(li);
-    });
-    $("r-padrino").innerHTML = tarjetaPadrino(state.padrino);
-    $("padrino-dot").classList.add("show");
-    reiniciarChat();
+    padrinoDice("Por lo que me cuentas, Beca 18 te podría ayudar mucho." + detalle, "result")
+      .then(function (b) { marcarResultado(b, "Mi recomendación: postula a Beca 18"); })
+      .then(function () { return padrinoDice("Ojo: quien decide si ganas la beca es PRONABEC, no yo. Mi trabajo es ayudarte a postular bien, paso a paso."); })
+      .then(function () { return padrinoDice("Y si no calificas, tranqui: tenemos un Plan B con el Crédito Educativo. Empecemos con tus pasos."); })
+      .then(function () { terminar(true); });
   }
 
-  function tarjetaPadrino(p) {
-    return '<div class="padrino">' +
-      '<div class="avatar" style="background:' + p.color + '">' + p.iniciales + '</div>' +
-      '<div><h3>' + p.nombre + '</h3><div class="area">' + p.area + ' · UPC Monterrico</div>' +
-      '<span class="chip">' + p.chip + '</span></div></div>' +
-      '<p class="padrino-quote">“' + p.frase + '”</p>';
+  function marcarResultado(b, titulo) {
+    var t = document.createElement("b");
+    t.textContent = titulo;
+    b.insertBefore(t, b.firstChild);
   }
+
+  function unir(lista) {
+    if (lista.length === 1) return lista[0];
+    return lista.slice(0, -1).join(", ") + " y " + lista[lista.length - 1];
+  }
+
+  function terminar(postula) {
+    $("chat-actions").hidden = false;
+    $("chat-actions").firstElementChild.textContent = postula ? "Ver mis pasos para postular" : "Ver los pasos igual";
+    $("free-msg").hidden = false;
+    bajar($("chat-actions"));
+  }
+
+  $("send").addEventListener("click", function () {
+    var texto = $("msg").value.trim() || $("msg").placeholder;
+    burbuja(texto, "me");
+    $("msg").value = "";
+    $("toast").classList.remove("show");
+    var btn = $("send");
+    btn.disabled = true;
+    setTimeout(function () { $("toast").classList.add("show"); btn.disabled = false; }, 1200);
+  });
 
   /* ---------- Mis pasos ---------- */
   var CIRC = 2 * Math.PI * 34;
@@ -737,79 +826,11 @@
     $("steps-pct").textContent = pct + "%";
     $("steps-bar").style.width = pct + "%";
     $("ring-fg").style.strokeDashoffset = CIRC * (1 - pct / 100);
-    var titulo = hechos === 0 ? "Recién empiezas" : hechos === PASOS.length ? "¡Lo lograste!" : "¡Vas muy bien!";
-    $("steps-title").textContent = titulo;
+    $("steps-title").textContent = hechos === 0 ? "Recién empiezas" : hechos === PASOS.length ? "¡Lo lograste!" : "¡Vas muy bien!";
     $("steps-sub").textContent = hechos + " de " + PASOS.length + " pasos completados.";
     $("celebrate").classList.toggle("show", hechos === PASOS.length);
   }
 
-  /* ---------- Chat con el padrino ---------- */
-  function hora() {
-    var d = new Date();
-    return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
-  }
-
-  function burbuja(texto, quien) {
-    var div = document.createElement("div");
-    div.className = "bubble " + quien;
-    div.textContent = texto;
-    var s = document.createElement("small"); s.textContent = hora();
-    div.appendChild(s);
-    $("chat").appendChild(div);
-    return div;
-  }
-
-  function reiniciarChat() {
-    $("chat").innerHTML = "";
-    state.mensajes = 0;
-    $("toast").classList.remove("show");
-    var p = state.padrino;
-    burbuja("¡Hola! Soy " + p.nombre.split(" ")[0] + " y te voy a acompañar para postular a Beca 18. Cuéntame en qué te ayudo.", "them");
-  }
-
-  function pintarChat() {
-    var tiene = state.padrino !== null;
-    $("chat-empty").hidden = tiene;
-    $("chat-box").hidden = !tiene;
-    $("padrino-dot").classList.remove("show");
-    if (!tiene) return;
-    var p = state.padrino;
-    $("c-avatar").textContent = p.iniciales;
-    $("c-avatar").style.background = p.color;
-    $("c-name").textContent = p.nombre;
-  }
-
-  $("quick").addEventListener("click", function (e) {
-    var b = e.target.closest("button");
-    if (!b) return;
-    $("msg").value = b.textContent;
-    $("quick").querySelectorAll("button").forEach(function (x) { x.classList.toggle("selected", x === b); });
-  });
-
-  $("send").addEventListener("click", function () {
-    var texto = $("msg").value.trim() || $("msg").placeholder;
-    burbuja(texto, "me");
-    $("msg").value = "";
-    $("quick").querySelectorAll("button").forEach(function (x) { x.classList.remove("selected"); });
-    $("toast").classList.remove("show");
-    state.mensajes++;
-
-    var btn = $("send");
-    btn.disabled = true;
-    var esc = document.createElement("div");
-    esc.className = "bubble them";
-    esc.innerHTML = '<span class="typing"><i></i><i></i><i></i></span>';
-    setTimeout(function () {
-      $("chat").appendChild(esc);
-    }, 300);
-    setTimeout(function () {
-      esc.remove();
-      $("toast").classList.add("show");
-      btn.disabled = false;
-    }, 1500);
-  });
-
-  /* Inicio */
   pintarPasos();
 })();
 </script>
